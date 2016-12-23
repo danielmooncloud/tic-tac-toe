@@ -41,12 +41,12 @@ td {
 	display: none;
 }
 
-#pop_box {
+#pop_box, #game_box {
 	position: fixed;
 	background: black;
 	width: 30%;
 	height: 250px;
-	margin: 15px 0 0 35%;
+	margin: 100px 0 0 35%;
 	padding: 20px;
 	z-index: 1500;
 	display: none;
@@ -59,17 +59,7 @@ td {
   border-radius: 10px;
 }
 
-.X {
-  margin-top: 100px;
-  background-color: rgb(65, 143, 184);
-  color: black;
-  width: 80px;
-  height: 50px;
-  margin: 10px;
-  margin-top: 20px;
-}
-
-.O {
+.symbol, .answer {
   margin-top: 100px;
   background-color: rgb(65, 143, 184);
   color: black;
@@ -96,7 +86,7 @@ td {
 
 
 @media screen and (max-width: 500px) {
-  #pop_box {
+  #pop_box, #game_box {
     margin: 0;
     width: 100%;
     font-size: 24px;

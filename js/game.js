@@ -32,32 +32,29 @@ function Game() {
       this.computerTurn = function() {
        if(!gameEnded) {
         if(this.currentPlayer === theComputer) {
-        var index = this.currentPlayer.move(moveNumber, theBoard.returnSquares(), this.playerScore());
-        var symbol = this.playerSymbol();
-          if(theBoard.isSquareEmpty(index)) {
-          theBoard.setSquareOccupied(index);
-          this.currentPlayer.updateScore(theBoard.getValue(index));
-          moveNumber += 1;
-          interface.render(symbol, index);
-  
-          if(this.currentPlayer.isWinner()) {
-            setTimeout(function() {
-              alert('You Lost!');
-            }, 1000);
-            gameEnded = true;
-          }
-          
-          if(this.isTie()) {
-            setTimeout(function() {
-              alert('Tie Game!');
-            }, 1000);
-            gameEnded = true;
-          }
-          this.currentPlayer = thePlayer;
-          }
-          /*else {
-          this.computerTurn();
-            }*/
+            var index = this.currentPlayer.move(moveNumber, theBoard.returnSquares(), this.playerScore());
+            var symbol = this.playerSymbol();
+            if(theBoard.isSquareEmpty(index)) {
+            theBoard.setSquareOccupied(index);
+            this.currentPlayer.updateScore(theBoard.getValue(index));
+            moveNumber += 1;
+            interface.render(symbol, index);
+    
+            if(this.currentPlayer.isWinner()) {
+              setTimeout(function() {
+                interface.renderGame('You Lose!');
+              }, 1000);
+              gameEnded = true;
+            }
+            
+            if(this.isTie()) {
+              setTimeout(function() {
+                interface.renderGame('Tie Game!');
+              }, 1000);
+              gameEnded = true;
+            }
+            this.currentPlayer = thePlayer;
+            } 
           }
         } 
       }
@@ -73,14 +70,14 @@ function Game() {
             interface.render(this.playerSymbol(), squareIndex);         
             if(this.currentPlayer.isWinner()) {
               setTimeout(function() {
-                alert('You Won');
+                interface.renderGame('You Win!');
               }, 1000);
               gameEnded = true;
             }
             
             if(this.isTie()) {
               setTimeout(function() {
-                alert('Tie Game!')
+                interface.renderGame('Tie Game!');
               }, 1000);
               gameEnded = true;
             }
