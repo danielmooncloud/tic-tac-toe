@@ -1,0 +1,29 @@
+body {
+  margin: 0;
+  background-color: $turquoise;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 10px;
+}
+
+td {
+  border: 5px solid $black;
+}
+
+#pop_background {
+  background: $shadow;
+  opacity: .8;
+  cursor: pointer;
+}
+
+#pop_box, #game_box {
+  background-size: cover;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.symbol, .answer {
+  background-color: $turquoise;
+}

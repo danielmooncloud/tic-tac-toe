@@ -1,0 +1,26 @@
+.main {
+  width: 50%;
+  margin: 50px auto;
+  @media #{$break-laptop} {
+  	width: 80%;
+    margin: auto;
+  }
+  @media #{$break-phone} {
+    width: 100%;
+  }
+}
+
+table {
+  width: 100%;
+}
+
+td {
+  width: 140px;
+  height: 140px;
+  margin: 20px;
+  padding: 0px;
+  @media #{$break-phone} {
+    width: 33%;
+    height: 100px;
+  }
+}

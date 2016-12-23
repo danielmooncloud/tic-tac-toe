@@ -1,0 +1,20 @@
+//colors
+
+$black			:	rgb(1,1,1);
+$turquoise		:	rgb(65, 143, 184);
+$shadow			:	rgba(0,0,0,.8);
+
+//font-stacks
+
+$stack-sans-serif	:	Helvetica, Arial, sans-serif;
+$stack-bungee		:	'Bungee Shade', $stack-sans-serif;
+$stack-baloo		:	'Baloo Chettan', $stack-sans-serif;
+
+//paths
+
+$path-font			:	'https://fonts.googleapis.com/css?family=';
+
+//media queries
+
+$break-laptop		:	'screen and (max-width: 992px)';
+$break-phone		:	'screen and (max-width: 768px)';

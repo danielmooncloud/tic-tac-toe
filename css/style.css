@@ -1,75 +1,14 @@
-@import 'https://fonts.googleapis.com/css?family=Bungee+Shade';
-@import 'https://fonts.googleapis.com/css?family=Baloo+Chettan';
+/* Font Styles */
 
 
-body {
-  margin: 0;
-  background-color: rgb(65, 143, 184);
-  font-family: 'Bungee Shade', cursive;
-}
+/* Base Styles */
 
-.main {
-  width: 50%;
-  margin: 50px auto;
-}
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 10px;
-}
-td {
-  width: 140px;
-  height: 140px;
-  border: 5px solid black;
-  font-size: 80px;
-  color: black;
-  text-align: center;
-  margin: 20px;
-  padding: 0px;
-}
 
-#pop_background {
-	position: fixed;
-	width: 100%;
-	height: 1000px;
-	top: 0;
-	left: 0;
-	background: #000;
-	opacity: .8;
-	z-index: 1000;
-	cursor: pointer;
-	display: none;
-}
 
-#pop_box, #game_box {
-	position: fixed;
-	background: black;
-	width: 30%;
-	height: 250px;
-	margin: 100px 0 0 35%;
-	padding: 20px;
-	z-index: 1500;
-	display: none;
-	background-size: cover;
-	text-align: center;
-	color: rgb(65, 143, 184);
-	font-size: ; 24px;
-	font-family: 'Baloo Chettan', cursive;
-	cursor: pointer;
-  border-radius: 10px;
-}
 
-.symbol, .answer {
-  margin-top: 100px;
-  background-color: rgb(65, 143, 184);
-  color: black;
-  width: 80px;
-  height: 50px;
-  margin: 10px;
-  margin-top: 20px;
-}
 
-@media screen and (max-width: 850px) {
+
+@media screen and (max-width: 992px) {
   #pop_box {
     width: 80%;
     margin: 10%;
@@ -85,7 +24,7 @@ td {
 }
 
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 480px) {
   #pop_box, #game_box {
     margin: 0;
     width: 100%;
@@ -103,3 +42,6 @@ td {
   }
 
 }
+
+
+
