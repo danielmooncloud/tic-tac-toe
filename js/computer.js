@@ -6,6 +6,7 @@ function Computer(symbol) {
                    [17, 1], [12, 0], [5, 3], [9, 2]]; 
   
   this.symbol = symbol;
+  
   this.move = function(num, array, score) {
     for(var i = 0; i < 9; i++) {
       var digit = i;
@@ -13,6 +14,7 @@ function Computer(symbol) {
         filled.push(digit);
       }
     }
+    
   	var index;
     switch(num) {
     	case 1:
@@ -52,6 +54,7 @@ function Computer(symbol) {
   	var random = Math.floor(Math.random()*5);
   	return random;
   };
+  
   this.secondMove = function() {
   	if(filled[0] !== 0) {
   		return 0;
@@ -61,6 +64,7 @@ function Computer(symbol) {
   		return random;
   	}
   };
+  
   this.thirdMove = function() { 
   		if(filled[0] === 0) {
         if(filled[1] < 5) {
@@ -119,7 +123,7 @@ function Computer(symbol) {
   this.rowDetector = function(num1) {
     for(var i = 0; i < rowCombos.length; i++) {
         if(((num1 & rowCombos[i][0]) === rowCombos[i][0]) && filled.indexOf(rowCombos[i][1]) === -1) {       
-        return rowCombos[i][1];
+          return rowCombos[i][1];
         }
     } return false;
   }
@@ -217,6 +221,7 @@ function Computer(symbol) {
       return true;
     } return false;
   }
+
   this.getRandom = function(min, max) {
     var random = Math.floor((Math.random() * (max - min) + min));
     if(filled.indexOf(random) !== -1) {

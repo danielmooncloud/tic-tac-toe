@@ -1,10 +1,12 @@
 
 var interface = {
+  
   init: function() {
     this.cacheDom();
     this.bindEvents();
     this.renderNew();
   },
+  
   cacheDom: function() {
     this.$square = $('.square');
     this.$popBackground = $('#pop_background');
@@ -15,6 +17,7 @@ var interface = {
     this.$yes = $('#yes');
     this.$no = $('#no');
   },
+  
   bindEvents: function() {
     this.$square.click(function() {
       interface.handleClickSquare.call(this);
@@ -29,30 +32,35 @@ var interface = {
       interface.handleRestart();
     })
   },
+  
   render: function(player, id) {
     $('#' + id).text(player);
   },
+  
   renderNew: function() {
     this.$popBackground.fadeIn();
     this.$popBox.fadeIn('slow');
     this.$square.text('');
   },
+  
   renderGame: function(string) {
     this.$popBackground.fadeIn();
     this.$gameBoxText.html(string);
     this.$gameBox.fadeIn('slow');  
   },
+  
   handleClickSquare: function() {
    var index = $(this).attr('id');
    theGame.takeaTurn(index);
   },
+  
   handleRestart: function() {
     this.$gameBox.fadeOut('slow');
     setTimeout(function() {
       theGame.resetGame();
-    }, 1000);
-    
+    }, 1000);  
   },
+ 
   handleSymbol: function() {
     var symbol = $(this).attr('id');
     interface.$popBackground.fadeOut();
