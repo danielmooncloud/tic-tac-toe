@@ -1,38 +1,36 @@
-function Player(symbol) {
-  'use strict'
-  
-  this.symbol = symbol;
-  
-  this.getSymbol = function() {
-    return this.symbol;
-  }
-  
-  this.getScore = function() {
-    return this.score;
-  }
-  
-  this.score = 0;
-  
-  this.threeinaRow = [38, 193, 280, 74, 289, 148, 19, 13];
-  
-  this.updateScore = function(points) {
-    this.score += points;
-  };
-  
-  this.isWinner = function() {
-    for(var i = 0; i < this.threeinaRow.length; i++) {
-      if((this.threeinaRow[i] & this.score) === this.threeinaRow[i]) {
-        return true;
-      }
-    } return false;
-  };
-  
-  this.resetScore = function() {
-    this.score = 0;
-  };  
+export default class Player {
+	constructor(symbol) {
+		this._symbol = symbol;
+		this._score = 0;
+		this._threeinaRow = [38, 193, 280, 74, 289, 148, 19, 13];
+	}
+
+	get symbol() {
+		return this._symbol;
+	}
+
+	get score() {
+		return this._score;
+	}
+
+	updateScore(points) {
+		this._score += points;
+	};
+
+	resetScore() {
+		this._score = 0;
+	}; 
+
+	isWinner() {
+		for(var i = 0; i < this._threeinaRow.length; i++) {
+			if((this._threeinaRow[i] & this.score) === this._threeinaRow[i]) {
+				return true;
+			}
+		} return false;
+	};
 }
 
-module.exports = Player;
+
 
 
 

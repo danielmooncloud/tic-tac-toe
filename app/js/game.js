@@ -1,95 +1,91 @@
-var Board = require("./board.js");
-var Player = require("./player.js");
-var Computer = require("./computer.js");
+import Board from "./board.js";
+import Player from "./player.js";
+import Computer from "./computer.js";
 
 
 
-function Game() {
-	var thePlayer,
-		theComputer,
-		theBoard = new Board(),
-		gameEnded = false,
-		moveNumber = 1;
-		self = this;
+export default class Game {
+	constructor() {
+		this.board = new Board();
+		this.gameEnded = false;
+		this.moveNumber = 1;
+	}
 
-	this.init = function(view) {
+	init(view) {
 		this.view = view;
 		this.view.init();
 	}
-  
-	  
-	this.selectSymbol = function(char) {
+   
+	selectSymbol(char) {
 		if(char === 'X') {
-			theComputer = new Computer('O');
-			thePlayer = new Player('X');
-			this.currentPlayer = thePlayer;
+			this.computer = new Computer('O');
+			this.player = new Player('X');
+			this.currentPlayer = this.player;
 		} else if(char === 'O') {
-			theComputer = new Computer('X');
-			thePlayer = new Player('O');
-			this.currentPlayer = theComputer; 
-			this.executeMove(this.computerTurn(), thePlayer);  
+			this.computer = new Computer('X');
+			this.player = new Player('O');
+			this.currentPlayer = this.computer; 
+			this.executeMove(this.computerTurn(), this.player);  
 		}
 	}
 	  
-	this.currentSymbol = function() {
-		return this.currentPlayer.getSymbol();
+	currentSymbol() {
+		return this.currentPlayer.symbol;
 	}
 	  
-	this.playerScore = function() {
-		return thePlayer.getScore();
+	playerScore() {
+		return this.player.score;
 	}
   
-	this.computerTurn = function() {
-		return this.currentPlayer.move(moveNumber, theBoard.returnSquares(), this.playerScore());	
+	computerTurn() {
+		return this.currentPlayer.move(this.moveNumber, this.board.squares, this.playerScore());	
 	}
 	  
-	this.takeaTurn = function(index) {
-		this.executeMove(index, theComputer);
-		setTimeout(function() {
-			if(!gameEnded && self.currentPlayer === theComputer) {
-				self.executeMove(self.computerTurn(), thePlayer);
+	playerTurn(index) {
+		this.executeMove(index, this.computer);
+		setTimeout(() => {
+			if(!this.gameEnded && this.currentPlayer === this.computer) {
+				this.executeMove(this.computerTurn(), this.player);
 			}
 		}, 1000);
 	}
 
-	this.executeMove = function(index, player) {
-		if(!gameEnded && this.currentPlayer != player && theBoard.isSquareEmpty(index)) {
-			theBoard.setSquareOccupied(index);
-			this.currentPlayer.updateScore(theBoard.getValue(index));
-			moveNumber += 1;
+	executeMove(index, player) {
+		if(!this.gameEnded && this.currentPlayer != player && this.board.isSquareEmpty(index)) {
+			this.board.setSquareOccupied(index);
+			this.currentPlayer.updateScore(this.board.getValue(index));
+			this.moveNumber += 1;
 			this.view.render(this.currentSymbol(), index);         
 			this.ifOver();
 			this.currentPlayer = player;
 		}
 	}
 
-	this.ifOver = function() {
-		var message;
+	ifOver() {
+		let message;
 		if(this.currentPlayer.isWinner()) {
-			message = this.currentPlayer === thePlayer ? "You Win!" : "You Lose!";	
-		} else if (theBoard.isAllFilledIn()) {
+			message = this.currentPlayer === this.player ? "You Win!" : "You Lose!";	
+		} else if (this.board.isAllFilledIn()) {
 			message = "Tie Game!";
 		} else {
 			return false;
 		}
-		setTimeout(function() {
-			self.view.renderGame(message);
+		setTimeout(() => {
+			this.view.renderGame(message);
 		}, 1000);
-		gameEnded = true;
+		this.gameEnded = true;
 	}
 	  
-	this.resetGame = function() {
-		theBoard.resetSquares();
-		thePlayer.resetScore();
-		theComputer.resetScore();
-		gameEnded = false;
-		moveNumber = 1;
+	resetGame() {
+		this.board.resetSquares();
+		this.player.resetScore();
+		this.computer.resetScore();
+		this.gameEnded = false;
+		this.moveNumber = 1;
 		this.view.renderNew();
 	} 
 }
 
-
-module.exports = Game;
 
 
 

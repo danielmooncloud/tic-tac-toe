@@ -1,24 +1,22 @@
-function Square(value) {
-  'use strict';
-  this.value = value;
-  
-  this.marked = false;
-  
-  this.squareValue = function() {
-    return this.value;
-  };
-  
-  this.setOccupied = function() {
-    this.marked = true;
-  };
-  
-  this.setEmpty = function() {
-    this.marked = false;
-  };
-  
-  this.isEmpty = function() {
-    return (!this.marked);
-  };
-}
+export default class Square {
+	constructor(value) {
+		this._value = value;
+		this._marked = false;
+	}
 
-module.exports = Square;
+	get value() {
+		return this._value;
+	};
+
+	setOccupied() {
+		this._marked = true;
+	};
+
+	setEmpty() {
+		this._marked = false;
+	};
+
+	isEmpty() {
+		return !this._marked;
+	};
+}
