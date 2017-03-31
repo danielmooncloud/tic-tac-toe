@@ -43,12 +43,17 @@ td {
       font-size: 50px; } }
 
 #pop_box, #game_box {
-  font-size: 24px;
+  font-size: 20px;
   color: #418fb8;
   font-family: "Baloo Chettan", Helvetica, Arial, sans-serif; }
 
 .symbol, .answer {
+  font-family: "Baloo Chettan", Helvetica, Arial, sans-serif;
+  font-size: inherit;
   color: #010101; }
+
+body {
+  margin: 0; }
 
 .main {
   width: 50%;
@@ -84,21 +89,24 @@ td {
 #pop_box, #game_box {
   z-index: 1500;
   background: #010101;
-  width: 30%;
+  width: 40%;
   height: 250px;
-  margin: 100px 0 0 35%;
-  padding: 20px; }
+  margin: 100px 30%; }
   @media screen and (max-width: 992px) {
     #pop_box, #game_box {
-      width: 80%;
-      margin: 10%; } }
+      width: 60%;
+      margin: 100px 20%; } }
   @media screen and (max-width: 768px) {
     #pop_box, #game_box {
-      margin: 0;
-      width: 100%;
+      margin: 100px 10%;
+      width: 80%;
+      height: 300px;
       font-size: 24px; } }
 
 .symbol, .answer {
   width: 80px;
   height: 50px;
-  margin: 20px 10px; }
+  margin: 0px 10px; }
+
+h3 {
+  margin-top: -20px; }
