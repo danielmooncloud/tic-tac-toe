@@ -1,0 +1,108 @@
+@import url("https://fonts.googleapis.com/css?family=Bungee+Shade");
+@import url("https://fonts.googleapis.com/css?family=Baloo+Chettan");
+td, #pop_box, #game_box {
+  text-align: center; }
+
+#pop_background, #pop_box, #game_box {
+  display: none;
+  position: fixed; }
+
+body {
+  margin: 0;
+  background-color: #418fb8; }
+
+table {
+  border-collapse: separate;
+  border-spacing: 10px; }
+
+td {
+  border: 5px solid #010101; }
+
+#pop_background {
+  background: rgba(0, 0, 0, 0.8);
+  opacity: .8;
+  cursor: pointer; }
+
+#pop_box, #game_box {
+  background-size: cover;
+  cursor: pointer;
+  border-radius: 10px; }
+
+.symbol, .answer {
+  background-color: #418fb8; }
+
+body {
+  font-family: "Bungee Shade", Helvetica, Arial, sans-serif; }
+
+td {
+  font-size: 80px;
+  color: #010101; }
+  @media screen and (max-width: 992px) {
+    td {
+      font-size: 70px; } }
+  @media screen and (max-width: 768px) {
+    td {
+      font-size: 50px; } }
+
+#pop_box, #game_box {
+  font-size: 24px;
+  color: #418fb8;
+  font-family: "Baloo Chettan", Helvetica, Arial, sans-serif; }
+
+.symbol, .answer {
+  color: #010101; }
+
+.main {
+  width: 50%;
+  margin: 150px auto; }
+  @media screen and (max-width: 992px) {
+    .main {
+      width: 80%;
+      margin: auto; } }
+  @media screen and (max-width: 768px) {
+    .main {
+      width: 100%; } }
+
+table {
+  width: 100%; }
+
+td {
+  width: 140px;
+  height: 140px;
+  margin: 20px;
+  padding: 0px; }
+  @media screen and (max-width: 768px) {
+    td {
+      width: 33%;
+      height: 100px; } }
+
+#pop_background {
+  z-index: 1000;
+  width: 100%;
+  height: 1000px;
+  top: 0;
+  left: 0; }
+
+#pop_box, #game_box {
+  z-index: 1500;
+  background: #010101;
+  width: 30%;
+  height: 250px;
+  margin: 100px 0 0 35%;
+  padding: 20px; }
+  @media screen and (max-width: 992px) {
+    #pop_box, #game_box {
+      width: 80%;
+      margin: 10%; } }
+  @media screen and (max-width: 768px) {
+    #pop_box, #game_box {
+      margin: 0;
+      width: 100%;
+      font-size: 24px; } }
+
+.symbol, .answer {
+  width: 80px;
+  height: 50px;
+  margin: 20px 10px; }
+
+/*# sourceMappingURL=application.css.map */
