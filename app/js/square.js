@@ -6,17 +6,17 @@ export default class Square {
 
 	get value() {
 		return this._value;
-	};
+	}
 
 	setOccupied() {
 		this._marked = true;
-	};
+	}
 
 	setEmpty() {
 		this._marked = false;
-	};
+	}
 
 	isEmpty() {
 		return !this._marked;
-	};
+	}
 }

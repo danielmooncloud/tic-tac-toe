@@ -15,11 +15,11 @@ export default class Player {
 
 	updateScore(points) {
 		this._score += points;
-	};
+	}
 
 	resetScore() {
 		this._score = 0;
-	}; 
+	}
 
 	isWinner() {
 		for(var i = 0; i < this._threeinaRow.length; i++) {
@@ -27,7 +27,7 @@ export default class Player {
 				return true;
 			}
 		} return false;
-	};
+	}
 }
 
 

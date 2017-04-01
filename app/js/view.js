@@ -10,14 +10,14 @@ const view = {
   
 	cacheDom() {
 		this.$main = $(".main");
-		this.$popBackground = $('#pop_background');
-		this.$gameBox = $('#game_box');
-		this.$popBox = $('#pop_box');
-		this.$square = this.$main.find('.square');
-		this.$symbol = this.$popBox.find('.symbol'); 
+		this.$popBackground = $("#pop_background");
+		this.$gameBox = $("#game_box");
+		this.$popBox = $("#pop_box");
+		this.$square = this.$main.find(".square");
+		this.$symbol = this.$popBox.find(".symbol"); 
 		this.$gameBoxText = this.$gameBox.find("h1");   
-		this.$yes = this.$gameBox.find('#yes');
-		this.$no = this.$gameBox.find('#no');
+		this.$yes = this.$gameBox.find("#yes");
+		this.$no = this.$gameBox.find("#no");
 	},
   
 	bindEvents() {
@@ -32,23 +32,23 @@ const view = {
 		});
 		this.$no.click(() => {
 			view.handleRestart();
-		})
+		});
 	},
   
 	render(player, id) {
-		$('#' + id).text(player);
+		$("#" + id).text(player);
 	},
   
 	renderNew() {
 		this.$popBackground.fadeIn();
-		this.$popBox.fadeIn('slow');
-		this.$square.text('');
+		this.$popBox.fadeIn("slow");
+		this.$square.text("");
 	},
   
 	renderGame(string) {
 		this.$popBackground.fadeIn();
 		this.$gameBoxText.html(string);
-		this.$gameBox.fadeIn('slow');  
+		this.$gameBox.fadeIn("slow");  
 	},
   
 	handleClickSquare(index) {
@@ -56,7 +56,7 @@ const view = {
 	},
   
 	handleRestart() {
-		this.$gameBox.fadeOut('slow');
+		this.$gameBox.fadeOut("slow");
 		setTimeout(() => {
 			game.resetGame();
 		}, 1000);  
@@ -67,7 +67,7 @@ const view = {
 		this.$popBox.fadeOut();    
 		game.selectSymbol(value);
 	}
-}
+};
 
 const game = new Game();
 

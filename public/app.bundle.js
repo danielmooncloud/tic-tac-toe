@@ -74,41 +74,55 @@
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
-function Player(symbol) {
-  'use strict';
 
-  this.symbol = symbol;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  this.getSymbol = function () {
-    return this.symbol;
-  };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  this.getScore = function () {
-    return this.score;
-  };
+var Player = function () {
+	function Player(symbol) {
+		_classCallCheck(this, Player);
 
-  this.score = 0;
+		this._symbol = symbol;
+		this._score = 0;
+		this._threeinaRow = [38, 193, 280, 74, 289, 148, 19, 13];
+	}
 
-  this.threeinaRow = [38, 193, 280, 74, 289, 148, 19, 13];
+	_createClass(Player, [{
+		key: "updateScore",
+		value: function updateScore(points) {
+			this._score += points;
+		}
+	}, {
+		key: "resetScore",
+		value: function resetScore() {
+			this._score = 0;
+		}
+	}, {
+		key: "isWinner",
+		value: function isWinner() {
+			for (var i = 0; i < this._threeinaRow.length; i++) {
+				if ((this._threeinaRow[i] & this.score) === this._threeinaRow[i]) {
+					return true;
+				}
+			}return false;
+		}
+	}, {
+		key: "symbol",
+		get: function get() {
+			return this._symbol;
+		}
+	}, {
+		key: "score",
+		get: function get() {
+			return this._score;
+		}
+	}]);
 
-  this.updateScore = function (points) {
-    this.score += points;
-  };
-
-  this.isWinner = function () {
-    for (var i = 0; i < this.threeinaRow.length; i++) {
-      if ((this.threeinaRow[i] & this.score) === this.threeinaRow[i]) {
-        return true;
-      }
-    }return false;
-  };
-
-  this.resetScore = function () {
-    this.score = 0;
-  };
-}
+	return Player;
+}();
 
 exports.default = Player;
 
@@ -159,13 +173,13 @@ var Game = function () {
 	}, {
 		key: "selectSymbol",
 		value: function selectSymbol(char) {
-			if (char === 'X') {
-				this.computer = new _computer2.default('O');
-				this.player = new _player2.default('X');
+			if (char === "X") {
+				this.computer = new _computer2.default("O");
+				this.player = new _player2.default("X");
 				this.currentPlayer = this.player;
-			} else if (char === 'O') {
-				this.computer = new _computer2.default('X');
-				this.player = new _player2.default('O');
+			} else if (char === "O") {
+				this.computer = new _computer2.default("X");
+				this.player = new _player2.default("O");
 				this.currentPlayer = this.computer;
 				this.executeMove(this.computerTurn(), this.player);
 			}
@@ -173,17 +187,17 @@ var Game = function () {
 	}, {
 		key: "currentSymbol",
 		value: function currentSymbol() {
-			return this.currentPlayer.getSymbol();
+			return this.currentPlayer.symbol;
 		}
 	}, {
 		key: "playerScore",
 		value: function playerScore() {
-			return this.player.getScore();
+			return this.player.score;
 		}
 	}, {
 		key: "computerTurn",
 		value: function computerTurn() {
-			return this.currentPlayer.move(this.moveNumber, this.board.returnSquares(), this.playerScore());
+			return this.currentPlayer.move(this.moveNumber, this.board.squares, this.playerScore());
 		}
 	}, {
 		key: "playerTurn",
@@ -10094,53 +10108,74 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+	value: true
 });
-var Square = __webpack_require__(6);
 
-function Board() {
-  'use strict';
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  this.squares = [];
+var _square = __webpack_require__(6);
 
-  this.addSquares = function () {
-    for (var i = 0; i < 9; i++) {
-      this.squares[i] = new Square(Math.pow(2, i));
-    }
-  };
+var _square2 = _interopRequireDefault(_square);
 
-  this.addSquares();
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-  this.getValue = function (squareIndex) {
-    return this.squares[squareIndex].squareValue();
-  };
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  this.setSquareOccupied = function (squareIndex) {
-    this.squares[squareIndex].setOccupied();
-  };
+var Board = function () {
+	function Board() {
+		_classCallCheck(this, Board);
 
-  this.isSquareEmpty = function (squareIndex) {
-    return this.squares[squareIndex].isEmpty();
-  };
+		this._squares = [];
+		this.addSquares();
+	}
 
-  this.returnSquares = function () {
-    return this.squares;
-  };
+	_createClass(Board, [{
+		key: "addSquares",
+		value: function addSquares() {
+			for (var i = 0; i < 9; i++) {
+				this._squares[i] = new _square2.default(Math.pow(2, i));
+			}
+		}
+	}, {
+		key: "getValue",
+		value: function getValue(squareIndex) {
+			return this._squares[squareIndex]._value;
+		}
+	}, {
+		key: "setSquareOccupied",
+		value: function setSquareOccupied(squareIndex) {
+			this._squares[squareIndex].setOccupied();
+		}
+	}, {
+		key: "isSquareEmpty",
+		value: function isSquareEmpty(squareIndex) {
+			return this._squares[squareIndex].isEmpty();
+		}
+	}, {
+		key: "resetSquares",
+		value: function resetSquares() {
+			for (var i = 0; i < this.squares.length; i++) {
+				this._squares[i].setEmpty();
+			}
+		}
+	}, {
+		key: "isAllFilledIn",
+		value: function isAllFilledIn() {
+			for (var i = 0; i < this.squares.length; i++) {
+				if (this._squares[i].isEmpty()) {
+					return false;
+				}
+			}return true;
+		}
+	}, {
+		key: "squares",
+		get: function get() {
+			return this._squares;
+		}
+	}]);
 
-  this.resetSquares = function () {
-    for (var i = 0; i < this.squares.length; i++) {
-      this.squares[i].setEmpty();
-    }
-  };
-
-  this.isAllFilledIn = function () {
-    for (var i = 0; i < this.squares.length; i++) {
-      if (this.squares[i].isEmpty()) {
-        return false;
-      }
-    }return true;
-  };
-}
+	return Board;
+}();
 
 exports.default = Board;
 
@@ -10155,99 +10190,129 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 var _player = __webpack_require__(0);
 
 var _player2 = _interopRequireDefault(_player);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function Computer(symbol) {
-	'use strict';
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var filled = [];
-	var rowCombos = [[34, 2], [6, 5], [36, 1], [65, 7], [192, 0], [129, 6], [24, 8], [264, 4], [272, 3], [10, 6], [66, 3], [72, 1], [288, 0], [33, 8], [257, 5], [20, 7], [132, 4], [144, 2], [18, 0], [3, 4], [17, 1], [12, 0], [5, 3], [9, 2]];
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	this.symbol = symbol;
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	this.move = function (movenumber, squares, score) {
-		var index;
-		for (var i = 0; i < 9; i++) {
-			if (squares[i].marked && filled.indexOf(i) === -1) {
-				filled.push(i);
+var Computer = function (_Player) {
+	_inherits(Computer, _Player);
+
+	function Computer(symbol) {
+		_classCallCheck(this, Computer);
+
+		var _this = _possibleConstructorReturn(this, (Computer.__proto__ || Object.getPrototypeOf(Computer)).call(this, symbol));
+
+		_this._filled = [];
+		_this._rowCombos = [[34, 2], [6, 5], [36, 1], [65, 7], [192, 0], [129, 6], [24, 8], [264, 4], [272, 3], [10, 6], [66, 3], [72, 1], [288, 0], [33, 8], [257, 5], [20, 7], [132, 4], [144, 2], [18, 0], [3, 4], [17, 1], [12, 0], [5, 3], [9, 2]];
+
+		_this._symbol = symbol;
+		return _this;
+	}
+
+	_createClass(Computer, [{
+		key: "move",
+		value: function move(movenumber, squares, score) {
+			var index;
+			for (var i = 0; i < 9; i++) {
+				if (!squares[i].isEmpty() && this._filled.indexOf(i) === -1) {
+					this._filled.push(i);
+				}
+			}
+			index = movenumber === 1 ? this.getRandom(0, 5) : movenumber === 2 ? this.secondMove() : movenumber === 3 ? this.thirdMove() : movenumber === 4 ? this.fourthMove(score) : this.fifthMove(score);
+			this._filled.push(index);
+			return index;
+		}
+	}, {
+		key: "secondMove",
+		value: function secondMove() {
+			return this._filled[0] === 0 ? this.getRandom(1, 5) : 0;
+		}
+	}, {
+		key: "thirdMove",
+		value: function thirdMove() {
+			if (this._filled[0] === 0) {
+				return this._filled[1] < 5 ? this.verticalRow(this._filled[1]) : this.secondMove();
+			} else {
+				return this.isDiagonal(this._filled[0], this._filled[1]) ? this.verticalRow(this._filled[1]) : this._filled[1] === 0 ? this.diagonal(this._filled[0]) : 0;
 			}
 		}
-
-		index = movenumber === 1 ? this.getRandom(0, 5) : movenumber === 2 ? this.secondMove() : movenumber === 3 ? this.thirdMove() : movenumber === 4 ? this.fourthMove(score) : this.fifthMove(score);
-		filled.push(index);
-		return index;
-	};
-
-	this.secondMove = function () {
-		return filled[0] === 0 ? this.getRandom(1, 5) : 0;
-	};
-
-	this.thirdMove = function () {
-		if (filled[0] === 0) {
-			return filled[1] < 5 ? this.verticalRow(filled[1]) : this.secondMove();
-		} else {
-			return this.isDiagonal(filled[0], filled[1]) ? this.verticalRow(filled[1]) : filled[1] === 0 ? this.diagonal(filled[0]) : 0;
+	}, {
+		key: "fourthMove",
+		value: function fourthMove(playerScore) {
+			return this.rowDetector(playerScore) || (this.isDiagonal(this._filled[0], this._filled[2]) ? this.getRandom(5, 9) : this._filled[2] > 4 ? this.adjacent(this._filled[2]) : this.getRandom(1, 5));
 		}
-	};
+	}, {
+		key: "fifthMove",
+		value: function fifthMove(playerScore) {
+			return this.rowDetector(this.score) || this.rowDetector(playerScore) || (this.horzAdj(this._filled[0], this._filled[1]) ? this.verticalRow(this._filled[0]) : this.vertAdj(this._filled[0], this._filled[1]) ? this.horizontalRow(this._filled[0]) : this.getRandom(0, 9));
+		}
+	}, {
+		key: "rowDetector",
+		value: function rowDetector(num1) {
+			for (var i = 0; i < this._rowCombos.length; i++) {
+				if ((num1 & this._rowCombos[i][0]) === this._rowCombos[i][0] && this._filled.indexOf(this._rowCombos[i][1]) === -1) {
+					return this._rowCombos[i][1];
+				}
+			}return false;
+		}
+	}, {
+		key: "isDiagonal",
+		value: function isDiagonal(num1, num2) {
+			return num1 === 1 && num2 === 4 || num1 === 4 && num2 === 1 || num1 === 2 && num2 === 3 || num1 === 3 && num2 === 2;
+		}
+	}, {
+		key: "diagonal",
+		value: function diagonal(num) {
+			return num === 1 ? 4 : num === 4 ? 1 : num === 2 ? 3 : num === 3 ? 2 : false;
+		}
+	}, {
+		key: "verticalRow",
+		value: function verticalRow(num) {
+			return num === 1 ? 3 : num === 3 ? 1 : num === 2 ? 4 : num === 4 ? 2 : false;
+		}
+	}, {
+		key: "horizontalRow",
+		value: function horizontalRow(num) {
+			return num === 1 ? 2 : num === 2 ? 1 : num === 3 ? 4 : num === 4 ? 3 : false;
+		}
+	}, {
+		key: "adjacent",
+		value: function adjacent(num) {
+			return num === 5 || num === 6 ? 1 : num === 7 || num === 8 ? 4 : false;
+		}
+	}, {
+		key: "horzAdj",
+		value: function horzAdj(num1, num2) {
+			return (num1 === 1 || num1 === 2) && num2 === 5 ? true : (num1 === 3 || num1 === 4) && num2 === 8 ? true : false;
+		}
+	}, {
+		key: "vertAdj",
+		value: function vertAdj(num1, num2) {
+			return (num1 === 1 || num1 === 3) && num2 === 6 ? true : (num1 === 2 || num1 === 4) && num2 === 7 ? true : false;
+		}
+	}, {
+		key: "getRandom",
+		value: function getRandom(min, max) {
+			var random;
+			do {
+				random = Math.floor(Math.random() * (max - min) + min);
+			} while (this._filled.indexOf(random) != -1);
+			return random;
+		}
+	}]);
 
-	this.fourthMove = function (playerScore) {
-		return this.rowDetector(playerScore) || (this.isDiagonal(filled[0], filled[2]) ? this.getRandom(5, 9) : filled[2] > 4 ? this.adjacent(filled[2]) : this.getRandom(1, 5));
-	};
-
-	this.fifthMove = function (playerScore) {
-		return this.rowDetector(this.score) || this.rowDetector(playerScore) || (this.horzAdj(filled[0], filled[1]) ? this.verticalRow(filled[0]) : this.vertAdj(filled[0], filled[1]) ? this.horizontalRow(filled[0]) : this.getRandom(0, 9));
-	};
-
-	this.rowDetector = function (num1) {
-		for (var i = 0; i < rowCombos.length; i++) {
-			if ((num1 & rowCombos[i][0]) === rowCombos[i][0] && filled.indexOf(rowCombos[i][1]) === -1) {
-				return rowCombos[i][1];
-			}
-		}return false;
-	};
-
-	this.isDiagonal = function (num1, num2) {
-		return num1 === 1 && num2 === 4 || num1 === 4 && num2 === 1 || num1 === 2 && num2 === 3 || num1 === 3 && num2 === 2;
-	};
-
-	this.diagonal = function (num) {
-		return num === 1 ? 4 : num === 4 ? 1 : num === 2 ? 3 : num === 3 ? 2 : false;
-	};
-
-	this.verticalRow = function (num) {
-		return num === 1 ? 3 : num === 3 ? 1 : num === 2 ? 4 : num === 4 ? 2 : false;
-	};
-
-	this.horizontalRow = function (num) {
-		return num === 1 ? 2 : num === 2 ? 1 : num === 3 ? 4 : num === 4 ? 3 : false;
-	};
-
-	this.adjacent = function (num) {
-		return num === 5 || num === 6 ? 1 : num === 7 || num === 8 ? 4 : false;
-	};
-
-	this.horzAdj = function (num1, num2) {
-		return (num1 === 1 || num1 === 2) && num2 === 5 ? true : (num1 === 3 || num1 === 4) && num2 === 8 ? true : false;
-	};
-
-	this.vertAdj = function (num1, num2) {
-		return (num1 === 1 || num1 === 3) && num2 === 6 ? true : (num1 === 2 || num1 === 4) && num2 === 7 ? true : false;
-	};
-
-	this.getRandom = function (min, max) {
-		var random;
-		do {
-			random = Math.floor(Math.random() * (max - min) + min);
-		} while (filled.indexOf(random) != -1);
-		return random;
-	};
-}
-
-Computer.prototype = new _player2.default();
+	return Computer;
+}(_player2.default);
 
 exports.default = Computer;
 
@@ -10258,31 +10323,48 @@ exports.default = Computer;
 "use strict";
 
 
-function Square(value) {
-  'use strict';
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-  this.value = value;
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-  this.marked = false;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  this.squareValue = function () {
-    return this.value;
-  };
+var Square = function () {
+	function Square(value) {
+		_classCallCheck(this, Square);
 
-  this.setOccupied = function () {
-    this.marked = true;
-  };
+		this._value = value;
+		this._marked = false;
+	}
 
-  this.setEmpty = function () {
-    this.marked = false;
-  };
+	_createClass(Square, [{
+		key: "setOccupied",
+		value: function setOccupied() {
+			this._marked = true;
+		}
+	}, {
+		key: "setEmpty",
+		value: function setEmpty() {
+			this._marked = false;
+		}
+	}, {
+		key: "isEmpty",
+		value: function isEmpty() {
+			return !this._marked;
+		}
+	}, {
+		key: "value",
+		get: function get() {
+			return this._value;
+		}
+	}]);
 
-  this.isEmpty = function () {
-    return !this.marked;
-  };
-}
+	return Square;
+}();
 
-module.exports = Square;
+exports.default = Square;
 
 /***/ }),
 /* 7 */
@@ -10307,14 +10389,14 @@ var view = {
 	},
 	cacheDom: function cacheDom() {
 		this.$main = $(".main");
-		this.$popBackground = $('#pop_background');
-		this.$gameBox = $('#game_box');
-		this.$popBox = $('#pop_box');
-		this.$square = this.$main.find('.square');
-		this.$symbol = this.$popBox.find('.symbol');
+		this.$popBackground = $("#pop_background");
+		this.$gameBox = $("#game_box");
+		this.$popBox = $("#pop_box");
+		this.$square = this.$main.find(".square");
+		this.$symbol = this.$popBox.find(".symbol");
 		this.$gameBoxText = this.$gameBox.find("h1");
-		this.$yes = this.$gameBox.find('#yes');
-		this.$no = this.$gameBox.find('#no');
+		this.$yes = this.$gameBox.find("#yes");
+		this.$no = this.$gameBox.find("#no");
 	},
 	bindEvents: function bindEvents() {
 		this.$square.click(function (e) {
@@ -10331,38 +10413,38 @@ var view = {
 		});
 	},
 	render: function render(player, id) {
-		$('#' + id).text(player);
+		$("#" + id).text(player);
 	},
 	renderNew: function renderNew() {
 		this.$popBackground.fadeIn();
-		this.$popBox.fadeIn('slow');
-		this.$square.text('');
+		this.$popBox.fadeIn("slow");
+		this.$square.text("");
 	},
 	renderGame: function renderGame(string) {
 		this.$popBackground.fadeIn();
 		this.$gameBoxText.html(string);
-		this.$gameBox.fadeIn('slow');
+		this.$gameBox.fadeIn("slow");
 	},
 	handleClickSquare: function handleClickSquare(index) {
-		theGame.playerTurn(index);
+		game.playerTurn(index);
 	},
 	handleRestart: function handleRestart() {
-		this.$gameBox.fadeOut('slow');
+		this.$gameBox.fadeOut("slow");
 		setTimeout(function () {
-			theGame.resetGame();
+			game.resetGame();
 		}, 1000);
 	},
 	handleSymbol: function handleSymbol(value) {
 		this.$popBackground.fadeOut();
 		this.$popBox.fadeOut();
-		theGame.selectSymbol(value);
+		game.selectSymbol(value);
 	}
 };
 
-var theGame = new _game2.default();
+var game = new _game2.default();
 
 $(document).ready(function () {
-	theGame.init(view);
+	game.init(view);
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 

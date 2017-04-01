@@ -17,22 +17,22 @@ export default class Game {
 	}
    
 	selectSymbol(char) {
-		if(char === 'X') {
-			this.computer = new Computer('O');
-			this.player = new Player('X');
+		if(char === "X") {
+			this.computer = new Computer("O");
+			this.player = new Player("X");
 			this.currentPlayer = this.player;
-		} else if(char === 'O') {
-			this.computer = new Computer('X');
-			this.player = new Player('O');
+		} else if(char === "O") {
+			this.computer = new Computer("X");
+			this.player = new Player("O");
 			this.currentPlayer = this.computer; 
 			this.executeMove(this.computerTurn(), this.player);  
 		}
 	}
-	  
+  
 	currentSymbol() {
 		return this.currentPlayer.symbol;
 	}
-	  
+
 	playerScore() {
 		return this.player.score;
 	}
@@ -40,7 +40,7 @@ export default class Game {
 	computerTurn() {
 		return this.currentPlayer.move(this.moveNumber, this.board.squares, this.playerScore());	
 	}
-	  
+
 	playerTurn(index) {
 		this.executeMove(index, this.computer);
 		setTimeout(() => {
@@ -75,7 +75,7 @@ export default class Game {
 		}, 1000);
 		this.gameEnded = true;
 	}
-	  
+
 	resetGame() {
 		this.board.resetSquares();
 		this.player.resetScore();
