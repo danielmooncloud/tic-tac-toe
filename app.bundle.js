@@ -10222,7 +10222,7 @@ var Computer = function (_Player) {
 	_createClass(Computer, [{
 		key: "move",
 		value: function move(movenumber, squares, score) {
-			var index;
+			var index = void 0;
 			for (var i = 0; i < 9; i++) {
 				if (!squares[i].isEmpty() && this._filled.indexOf(i) === -1) {
 					this._filled.push(i);
@@ -10254,7 +10254,7 @@ var Computer = function (_Player) {
 	}, {
 		key: "fifthMove",
 		value: function fifthMove(playerScore) {
-			return this.rowDetector(this.score) || this.rowDetector(playerScore) || (this.horzAdj(this._filled[0], this._filled[1]) ? this.verticalRow(this._filled[0]) : this.vertAdj(this._filled[0], this._filled[1]) ? this.horizontalRow(this._filled[0]) : this.getRandom(0, 9));
+			return this.rowDetector(this.score) || this.rowDetector(playerScore) || (this.horzAdj(this._filled[0], this._filled[1]) ? this.verticalRow(this._filled[0]) : this.vertAdj(this._filled[0], this._filled[1]) ? this.horizontalRow(this._filled[0]) : this._filled[0] > 0 && this._filled[0] < 5 && this._filled[1] > 0 && this._filled[1] < 5 && this._filled[2] > 0 && this._filled[2] < 5 ? this.getRandom(0, 5) : this.getRandom(0, 9));
 		}
 	}, {
 		key: "rowDetector",
@@ -10303,7 +10303,7 @@ var Computer = function (_Player) {
 	}, {
 		key: "getRandom",
 		value: function getRandom(min, max) {
-			var random;
+			var random = void 0;
 			do {
 				random = Math.floor(Math.random() * (max - min) + min);
 			} while (this._filled.indexOf(random) != -1);
