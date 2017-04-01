@@ -8,7 +8,7 @@
   left: 0; 
 }
 
-#pop_box, #game_box {
+#pop_box, #game_box, #loop_box {
   @extend %popup;
   z-index: 1500;
   background: $black;

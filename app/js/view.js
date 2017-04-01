@@ -13,6 +13,7 @@ const view = {
 		this.$popBackground = $("#pop_background");
 		this.$gameBox = $("#game_box");
 		this.$popBox = $("#pop_box");
+		this.$loopBox = $("#loop_box");
 		this.$square = this.$main.find(".square");
 		this.$symbol = this.$popBox.find(".symbol"); 
 		this.$gameBoxText = this.$gameBox.find("h1");   
@@ -31,7 +32,7 @@ const view = {
 			view.handleRestart();
 		});
 		this.$no.click(() => {
-			view.handleRestart();
+			view.handleNo();
 		});
 	},
   
@@ -60,6 +61,19 @@ const view = {
 		setTimeout(() => {
 			game.resetGame();
 		}, 1000);  
+	},
+
+	handleNo() {
+		this.$gameBox.fadeOut("slow");
+		setTimeout(() => {
+			this.$loopBox.fadeIn("slow");
+		}, 1000);
+		setTimeout(() => {
+			this.$loopBox.fadeOut("slow");
+		}, 2000);
+		setTimeout(() => {
+			game.resetGame();
+		}, 3000);
 	},
  
 	handleSymbol(value) {
