@@ -22,7 +22,7 @@ export default class Player {
 	}
 
 	isWinner() {
-		for(var i = 0; i < this._threeinaRow.length; i++) {
+		for(let i = 0; i < this._threeinaRow.length; i++) {
 			if((this._threeinaRow[i] & this.score) === this._threeinaRow[i]) {
 				return true;
 			}

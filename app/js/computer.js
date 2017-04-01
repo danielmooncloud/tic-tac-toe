@@ -13,8 +13,8 @@ export default class Computer extends Player {
 	}
   
 	move(movenumber, squares, score) {
-		var index;
-		for(var i = 0; i < 9; i++) {
+		let index;
+		for(let i = 0; i < 9; i++) {
 			if(!squares[i].isEmpty() && this._filled.indexOf(i) === -1) {
 				this._filled.push(i);
 			}
@@ -55,12 +55,15 @@ export default class Computer extends Player {
 		return	this.rowDetector(this.score) || this.rowDetector(playerScore) ||
 				(
 				this.horzAdj(this._filled[0], this._filled[1])	?	this.verticalRow(this._filled[0])		:
-				this.vertAdj(this._filled[0], this._filled[1])	?	this.horizontalRow(this._filled[0])		: 	this.getRandom(0, 9)
+				this.vertAdj(this._filled[0], this._filled[1])	?	this.horizontalRow(this._filled[0])		: 	
+				this._filled[0] > 0 && this._filled[0] < 5 &&
+				this._filled[1] > 0 && this._filled[1] < 5 &&
+				this._filled[2] > 0 && this._filled[2] < 5		?	this.getRandom(0, 5)	:  this.getRandom(0, 9)   
 			);
 	}
 
 	rowDetector(num1) {
-		for(var i = 0; i < this._rowCombos.length; i++) {
+		for(let i = 0; i < this._rowCombos.length; i++) {
 			if(((num1 & this._rowCombos[i][0]) === this._rowCombos[i][0]) && this._filled.indexOf(this._rowCombos[i][1]) === -1) {       
 				return this._rowCombos[i][1];
 			}
@@ -111,7 +114,7 @@ export default class Computer extends Player {
 	}
 
 	getRandom(min, max) {
-		var random;
+		let random;
 		do {
 			random = Math.floor((Math.random() * (max - min) + min));
 		} while (this._filled.indexOf(random) != -1);
