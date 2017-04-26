@@ -5,7 +5,7 @@ export default class Computer extends Player {
 	constructor(symbol) {
 		super(symbol);
 		this._filled = [];
-		this._rowCombos = 	[[34, 2],[6, 5],[36, 1], [65, 7], [192, 0], [129, 6], [24, 8], [264, 4], [272, 3], [10, 6], 
+		this._rowCombos = 	[[34, 2],[6, 5], [36, 1], [65, 7], [192, 0], [129, 6], [24, 8], [264, 4], [272, 3], [10, 6], 
 							[66, 3], [72, 1], [288, 0], [33, 8], [257, 5], [20, 7], [132, 4], [144, 2], [18, 0], [3, 4],
 							[17, 1], [12, 0], [5, 3], [9, 2]]; 
 
@@ -19,47 +19,51 @@ export default class Computer extends Player {
 				this._filled.push(i);
 			}
 		}
+		
 		index = (
-			movenumber === 1 ? this.getRandom(0, 5) :
-			movenumber === 2 ? this.secondMove() :
-			movenumber === 3 ? this.thirdMove() :
-			movenumber === 4 ? this.fourthMove(score) :
-			this.fifthMove(score)
+			movenumber === 1 ? 	this.getRandom(0, 5) :
+			movenumber === 2 ? 	this.secondMove(this._filled[0]) :
+			movenumber === 3 ? 	this.thirdMove(this._filled[0], this._filled[1]) :
+			movenumber === 4 ? 	this.fourthMove(score, this._filled[0], this._filled[2]) : 
+								this.fifthMove(this._score, score, this._filled[0], this._filled[1], this._filled[2]) 
 		);
+		
 		this._filled.push(index);
 		return index;
 	}
   
-	secondMove() {
-		return this._filled[0] === 0 ? this.getRandom(1, 5) : 0;
+	secondMove(num) {
+		return num === 0 ? this.getRandom(1, 5) : 0;
 	}
   
-	thirdMove() { 
-		if(this._filled[0] === 0) {
-			return this._filled[1] < 5 ? this.verticalRow(this._filled[1]) : this.secondMove();
-		} else {
-			return this.isDiagonal(this._filled[0], this._filled[1])	? 	this.verticalRow(this._filled[1]) 	: 
-											this._filled[1] === 0	 	?	this.diagonal(this._filled[0]) 		: 	0;
+	thirdMove(num1, num2) { 
+		if(num1 === 0) {
+			//computer owns the center
+			return num2 < 5 ? this.verticalRow(num2) : this.getRandom(1, 5);
+		} else {	
+					//kitty-corner ?		
+			return 	this.isDiagonal(num1, num2)	? 	this.verticalRow(num2) 	: 
+					//player owns the center ?
+					num2 === 0	 				?	this.diagonal(num1) 	: 	0;
 		}	
 	}
 
-	fourthMove(playerScore) {
-		return 	this.rowDetector(playerScore)	|| 
-			(
-			this.isDiagonal(this._filled[0], this._filled[2])	? 	this.getRandom(5, 9)			: 
-										this._filled[2] > 4		?	this.adjacent(this._filled[2])	: 	this.getRandom(1, 5)
+	fourthMove(playerScore, num1, num2) {
+		return 	this.rowDetector(playerScore)	|| 	(
+			this.isDiagonal(num1, num2)	? 	this.getRandom(5, 9): 
+			num2 > 4					?	this.adjacent(num2)	: 	
+											this.getRandom(1, 5)
 		);
 	}
 
-	fifthMove(playerScore) {
-		return	this.rowDetector(this.score) || this.rowDetector(playerScore) ||
-				(
-				this.horzAdj(this._filled[0], this._filled[1])	?	this.verticalRow(this._filled[0])		:
-				this.vertAdj(this._filled[0], this._filled[1])	?	this.horizontalRow(this._filled[0])		: 	
-				this._filled[0] > 0 && this._filled[0] < 5 &&
-				this._filled[1] > 0 && this._filled[1] < 5 &&
-				this._filled[2] > 0 && this._filled[2] < 5		?	this.getRandom(0, 5)	:  this.getRandom(0, 9)   
-			);
+	fifthMove(computerScore, playerScore, num1, num2, num3) {
+		if(this.rowDetector(computerScore) !== false) return this.rowDetector(computerScore);
+		return	this.rowDetector(playerScore) || (
+					this.horzAdj(num1, num2)	?	this.verticalRow(num1)	:
+					this.vertAdj(num1, num2)	?	this.horizontalRow(num1): 	
+					num1 > 0 && num1 < 5 && num2 > 0 && num2 < 5 && num1 > 0 && num3 < 5	?	
+					this.getRandom(1, 5)	:  this.getRandom(0, 9)   
+				);
 	}
 
 	rowDetector(num1) {
