@@ -50,14 +50,14 @@ export default class Game {
 		}, 1000);
 	}
 
-	executeMove(index, player) {
-		if(!this.gameEnded && this.currentPlayer != player && this.board.isSquareEmpty(index)) {
+	executeMove(index, opposingPlayer) {
+		if(!this.gameEnded && this.currentPlayer != opposingPlayer && this.board.isSquareEmpty(index)) {
 			this.board.setSquareOccupied(index);
 			this.currentPlayer.updateScore(this.board.getValue(index));
 			this.moveNumber += 1;
 			this.view.render(this.currentSymbol(), index);         
 			this.ifOver();
-			this.currentPlayer = player;
+			this.currentPlayer = opposingPlayer;
 		}
 	}
 

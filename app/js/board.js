@@ -37,7 +37,7 @@ export default class Board {
 	}
 
 	isAllFilledIn() {
-		for(let i = 0; i < this.squares.length; i++) {
+		for(let i = 0; i < this._squares.length; i++) {
 			if(this._squares[i].isEmpty()) {
 				return false;
 			}
