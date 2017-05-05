@@ -213,14 +213,14 @@ var Game = function () {
 		}
 	}, {
 		key: "executeMove",
-		value: function executeMove(index, player) {
-			if (!this.gameEnded && this.currentPlayer != player && this.board.isSquareEmpty(index)) {
+		value: function executeMove(index, opposingPlayer) {
+			if (!this.gameEnded && this.currentPlayer != opposingPlayer && this.board.isSquareEmpty(index)) {
 				this.board.setSquareOccupied(index);
 				this.currentPlayer.updateScore(this.board.getValue(index));
 				this.moveNumber += 1;
 				this.view.render(this.currentSymbol(), index);
 				this.ifOver();
-				this.currentPlayer = player;
+				this.currentPlayer = opposingPlayer;
 			}
 		}
 	}, {
@@ -10161,7 +10161,7 @@ var Board = function () {
 	}, {
 		key: "isAllFilledIn",
 		value: function isAllFilledIn() {
-			for (var i = 0; i < this.squares.length; i++) {
+			for (var i = 0; i < this._squares.length; i++) {
 				if (this._squares[i].isEmpty()) {
 					return false;
 				}
@@ -10228,33 +10228,40 @@ var Computer = function (_Player) {
 					this._filled.push(i);
 				}
 			}
-			index = movenumber === 1 ? this.getRandom(0, 5) : movenumber === 2 ? this.secondMove() : movenumber === 3 ? this.thirdMove() : movenumber === 4 ? this.fourthMove(score) : this.fifthMove(score);
+
+			index = movenumber === 1 ? this.getRandom(0, 5) : movenumber === 2 ? this.secondMove(this._filled[0]) : movenumber === 3 ? this.thirdMove(this._filled[0], this._filled[1]) : movenumber === 4 ? this.fourthMove(score, this._filled[0], this._filled[2]) : this.fifthMove(this._score, score, this._filled[0], this._filled[1], this._filled[2]);
+
 			this._filled.push(index);
 			return index;
 		}
 	}, {
 		key: "secondMove",
-		value: function secondMove() {
-			return this._filled[0] === 0 ? this.getRandom(1, 5) : 0;
+		value: function secondMove(num) {
+			return num === 0 ? this.getRandom(1, 5) : 0;
 		}
 	}, {
 		key: "thirdMove",
-		value: function thirdMove() {
-			if (this._filled[0] === 0) {
-				return this._filled[1] < 5 ? this.verticalRow(this._filled[1]) : this.secondMove();
+		value: function thirdMove(num1, num2) {
+			if (num1 === 0) {
+				//computer owns the center
+				return num2 < 5 ? this.verticalRow(num2) : this.getRandom(1, 5);
 			} else {
-				return this.isDiagonal(this._filled[0], this._filled[1]) ? this.verticalRow(this._filled[1]) : this._filled[1] === 0 ? this.diagonal(this._filled[0]) : 0;
+				//kitty-corner ?		
+				return this.isDiagonal(num1, num2) ? this.verticalRow(num2) :
+				//player owns the center ?
+				num2 === 0 ? this.diagonal(num1) : 0;
 			}
 		}
 	}, {
 		key: "fourthMove",
-		value: function fourthMove(playerScore) {
-			return this.rowDetector(playerScore) || (this.isDiagonal(this._filled[0], this._filled[2]) ? this.getRandom(5, 9) : this._filled[2] > 4 ? this.adjacent(this._filled[2]) : this.getRandom(1, 5));
+		value: function fourthMove(playerScore, num1, num2) {
+			return this.rowDetector(playerScore) || (this.isDiagonal(num1, num2) ? this.getRandom(5, 9) : num2 > 4 ? this.adjacent(num2) : this.getRandom(1, 5));
 		}
 	}, {
 		key: "fifthMove",
-		value: function fifthMove(playerScore) {
-			return this.rowDetector(this.score) || this.rowDetector(playerScore) || (this.horzAdj(this._filled[0], this._filled[1]) ? this.verticalRow(this._filled[0]) : this.vertAdj(this._filled[0], this._filled[1]) ? this.horizontalRow(this._filled[0]) : this._filled[0] > 0 && this._filled[0] < 5 && this._filled[1] > 0 && this._filled[1] < 5 && this._filled[2] > 0 && this._filled[2] < 5 ? this.getRandom(0, 5) : this.getRandom(0, 9));
+		value: function fifthMove(computerScore, playerScore, num1, num2, num3) {
+			if (this.rowDetector(computerScore) !== false) return this.rowDetector(computerScore);
+			return this.rowDetector(playerScore) || (this.horzAdj(num1, num2) ? this.verticalRow(num1) : this.vertAdj(num1, num2) ? this.horizontalRow(num1) : num1 > 0 && num1 < 5 && num2 > 0 && num2 < 5 && num1 > 0 && num3 < 5 ? this.getRandom(1, 5) : this.getRandom(0, 9));
 		}
 	}, {
 		key: "rowDetector",
@@ -10392,6 +10399,7 @@ var view = {
 		this.$popBackground = $("#pop_background");
 		this.$gameBox = $("#game_box");
 		this.$popBox = $("#pop_box");
+		this.$loopBox = $("#loop_box");
 		this.$square = this.$main.find(".square");
 		this.$symbol = this.$popBox.find(".symbol");
 		this.$gameBoxText = this.$gameBox.find("h1");
@@ -10409,7 +10417,7 @@ var view = {
 			view.handleRestart();
 		});
 		this.$no.click(function () {
-			view.handleRestart();
+			view.handleNo();
 		});
 	},
 	render: function render(player, id) {
@@ -10433,6 +10441,20 @@ var view = {
 		setTimeout(function () {
 			game.resetGame();
 		}, 1000);
+	},
+	handleNo: function handleNo() {
+		var _this = this;
+
+		this.$gameBox.fadeOut("slow");
+		setTimeout(function () {
+			_this.$loopBox.fadeIn("slow");
+		}, 1000);
+		setTimeout(function () {
+			_this.$loopBox.fadeOut("slow");
+		}, 2000);
+		setTimeout(function () {
+			game.resetGame();
+		}, 3000);
 	},
 	handleSymbol: function handleSymbol(value) {
 		this.$popBackground.fadeOut();
