@@ -1,7 +1,7 @@
 import Board from "./board.js";
 import Player from "./player.js";
 import Computer from "./computer.js";
-
+import pubSub from "./pubsub";
 
 
 export default class Game {
@@ -9,23 +9,40 @@ export default class Game {
 		this.board = new Board();
 		this.gameEnded = false;
 		this.moveNumber = 1;
+		this.computer;
+		this.player;
+		this.currentPlayer;
+		this.bindEvents();
+		
 	}
 
-	init(view) {
-		this.view = view;
-		this.view.init();
+	bindEvents() {
+		pubSub.subscribe("playerTurn", index => {
+			this.playerTurn(index);
+		});
+		pubSub.subscribe("resetGame", () => {
+			this.resetGame();
+		});
+		pubSub.subscribe("selectSymbol", value => {
+			this.selectSymbol(value);
+		});
 	}
    
 	selectSymbol(char) {
 		if(char === "X") {
+			// If the player chooses X
 			this.computer = new Computer("O");
 			this.player = new Player("X");
 			this.currentPlayer = this.player;
 		} else if(char === "O") {
+			//If the player choose O
 			this.computer = new Computer("X");
 			this.player = new Player("O");
-			this.currentPlayer = this.computer; 
-			this.executeMove(this.computerTurn(), this.player);  
+			this.currentPlayer = this.computer;
+			//The computer selects a square
+			const squareIndex = this.computerTurn();
+			//The game sets the computer's square as occupied and switches the current Player
+			this.executeMove(squareIndex, this.player);  
 		}
 	}
   
@@ -38,16 +55,11 @@ export default class Game {
 	}
   
 	computerTurn() {
-		return this.currentPlayer.move(this.moveNumber, this.board.squares, this.playerScore());	
+		return this.computer.move(this.moveNumber, this.board.squares, this.playerScore());	
 	}
 
-	playerTurn(index) {
+	playerTurn(index) { 
 		this.executeMove(index, this.computer);
-		setTimeout(() => {
-			if(!this.gameEnded && this.currentPlayer === this.computer) {
-				this.executeMove(this.computerTurn(), this.player);
-			}
-		}, 1000);
 	}
 
 	executeMove(index, opposingPlayer) {
@@ -55,13 +67,19 @@ export default class Game {
 			this.board.setSquareOccupied(index);
 			this.currentPlayer.updateScore(this.board.getValue(index));
 			this.moveNumber += 1;
-			this.view.render(this.currentSymbol(), index);         
-			this.ifOver();
+			pubSub.publish("renderSquare", {symbol: this.currentSymbol(), index});   
+			this.isGameOver();
 			this.currentPlayer = opposingPlayer;
+			if(!this.gameEnded && this.currentPlayer === this.computer) {
+				setTimeout(() => {
+					const squareIndex = this.computerTurn();
+					this.executeMove(squareIndex, this.player);
+				}, 1000);
+			}
 		}
 	}
 
-	ifOver() {
+	isGameOver() {
 		let message;
 		if(this.currentPlayer.isWinner()) {
 			message = this.currentPlayer === this.player ? "You Win!" : "You Lose!";	
@@ -71,7 +89,7 @@ export default class Game {
 			return false;
 		}
 		setTimeout(() => {
-			this.view.renderGame(message);
+			pubSub.publish("renderMessage", message);
 		}, 1000);
 		this.gameEnded = true;
 	}
@@ -82,7 +100,7 @@ export default class Game {
 		this.computer.resetScore();
 		this.gameEnded = false;
 		this.moveNumber = 1;
-		this.view.renderNew();
+		pubSub.publish("renderNewGame", null);
 	} 
 }
 

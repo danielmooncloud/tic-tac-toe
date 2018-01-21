@@ -4,125 +4,195 @@ import Player from "./player.js";
 export default class Computer extends Player {
 	constructor(symbol) {
 		super(symbol);
+		//The computers list of occupied squares
 		this._filled = [];
-		this._rowCombos = 	[[34, 2],[6, 5], [36, 1], [65, 7], [192, 0], [129, 6], [24, 8], [264, 4], [272, 3], [10, 6], 
-							[66, 3], [72, 1], [288, 0], [33, 8], [257, 5], [20, 7], [132, 4], [144, 2], [18, 0], [3, 4],
-							[17, 1], [12, 0], [5, 3], [9, 2]]; 
 
-		this._symbol = symbol;
+		//they keys represent square indices,
+		//the keys array values represent scores for each row or column running through that square
+		this._rowCombos = {
+			0: [12, 18, 192, 288],
+			1: [17, 36, 72],
+			2: [9, 34, 144],
+			3: [5, 66, 272],
+			4: [3, 132, 264],
+			5: [6, 257],
+			6: [10, 129],
+			7: [20, 65],
+			8: [24, 33]
+		};
+
+		this.movesList = {
+			1: this.getRandomCornerSquare.bind(this),
+			2: this.secondMove.bind(this),
+			3: this.thirdMove.bind(this),
+			4: this.fourthMove.bind(this),
+			5: this.laterMoves.bind(this),
+			6: this.laterMoves.bind(this),
+			7: this.laterMoves.bind(this),
+			8: this.laterMoves.bind(this),
+			9: this.laterMoves.bind(this)
+		};
 	}
-  
-	move(movenumber, squares, score) {
-		let index;
+
+
+	move(moveNumber, squares, playerScore) {
+		//Fills in any previously unoccupied squarse
 		for(let i = 0; i < 9; i++) {
 			if(!squares[i].isEmpty() && this._filled.indexOf(i) === -1) {
 				this._filled.push(i);
 			}
 		}
-		
-		index = (
-			movenumber === 1 ? 	this.getRandom(0, 5) :
-			movenumber === 2 ? 	this.secondMove(this._filled[0]) :
-			movenumber === 3 ? 	this.thirdMove(this._filled[0], this._filled[1]) :
-			movenumber === 4 ? 	this.fourthMove(score, this._filled[0], this._filled[2]) : 
-								this.fifthMove(this._score, score, this._filled[0], this._filled[1], this._filled[2]) 
-		);
-		
+		// A table which tells the computer which function to use depending on the moveNumber
+		const index = this.movesList[moveNumber](playerScore); 	
 		this._filled.push(index);
 		return index;
 	}
   
-	secondMove(num) {
-		return num === 0 ? this.getRandom(1, 5) : 0;
+
+	secondMove() {
+		return this.isOccupied(0) ? this.getRandomCornerSquare() : 0;
 	}
   
-	thirdMove(num1, num2) { 
-		if(num1 === 0) {
-			//computer owns the center
-			return num2 < 5 ? this.verticalRow(num2) : this.getRandom(1, 5);
-		} else {	
-					//kitty-corner ?		
-			return 	this.isDiagonal(num1, num2)	? 	this.verticalRow(num2) 	: 
-					//player owns the center ?
-					num2 === 0	 				?	this.diagonal(num1) 	: 	0;
-		}	
+
+
+	thirdMove() {
+		const computerSquare = this._filled[0];
+		const playerSquare = this._filled[1];
+		const centerSquare = 0;
+		//If the computer and player squares are diagonal to each other return the square vertical to the player's square
+		if(playerSquare === this.diagonalTo(computerSquare)) return this.verticalTo(playerSquare);
+		else if(playerSquare === this.verticalTo(computerSquare)) return this.diagonalTo(computerSquare);
+		else if(playerSquare === this.horizontalTo(computerSquare)) return this.diagonalTo(computerSquare);
+		//Computer takes the center square if it is empty
+		else if(!this.isOccupied(centerSquare)) return centerSquare;
+		//If the player has the center square, computer takes the square diagonal to its last square
+		else if(playerSquare === centerSquare) return this.diagonalTo(computerSquare);
+		//If the computer has the center square it takes the square vertical to the player's square
+		else return this.verticalTo(playerSquare);
 	}
 
-	fourthMove(playerScore, num1, num2) {
-		return 	this.rowDetector(playerScore)	|| 	(
-			this.isDiagonal(num1, num2)	? 	this.getRandom(5, 9): 
-			num2 > 4					?	this.adjacent(num2)	: 	
-											this.getRandom(1, 5)
-		);
+
+	fourthMove(playerScore) {
+		const num1 = this._filled[0];
+		const num2 = this._filled[2];
+		const rowsToBlock = this.rowDetector(playerScore);
+		//If there is a row that should be blocked, return the last square in that row
+		if(rowsToBlock !== null) return rowsToBlock;
+		else if(num2 === this.diagonalTo(num1, num2)) return this.getRandomSideSquare();
+		else if(this.isSideSquare(num2)) return this.adjacentTo(num2);
+		else return this.getRandomCornerSquare();
 	}
 
-	fifthMove(computerScore, playerScore, num1, num2, num3) {
-		if(this.rowDetector(computerScore) !== false) return this.rowDetector(computerScore);
-		return	this.rowDetector(playerScore) || (
-					this.horzAdj(num1, num2)	?	this.verticalRow(num1)	:
-					this.vertAdj(num1, num2)	?	this.horizontalRow(num1): 	
-					num1 > 0 && num1 < 5 && num2 > 0 && num2 < 5 && num1 > 0 && num3 < 5	?	
-					this.getRandom(1, 5)	:  this.getRandom(0, 9)   
-				);
+
+	laterMoves(playerScore) {
+		const num1 = this._filled[0];
+		const num2 = this._filled[1];
+		const num3 = this._filled[2];
+		const rowsToComplete = this.rowDetector(this._score);
+		const rowsToBlock = this.rowDetector(playerScore);
+		if(rowsToComplete !== null) return rowsToComplete;
+		else if(rowsToBlock !== null) return rowsToBlock;
+		else if(this.isHorzAdj(num1, num2)) return this.verticalTo(num1);
+		else if(this.isVertAdj(num1, num2)) return this.horizontalTo(num1);
+		else if(this.isCornerSquare(num1) && this.isCornerSquare(num2) && !this.isSideSquare(num3)) return this.getRandomCornerSquare();	
+		else return this.getRandomSquare();
 	}
 
-	rowDetector(num1) {
-		for(let i = 0; i < this._rowCombos.length; i++) {
-			if(((num1 & this._rowCombos[i][0]) === this._rowCombos[i][0]) && this._filled.indexOf(this._rowCombos[i][1]) === -1) {       
-				return this._rowCombos[i][1];
+
+	rowDetector(score) {
+		//Iterates through rowCombos values and checks for a match bit-match with score
+		//if a value matches score, the key of that value (the square index) is returned
+		const keys = Object.keys(this._rowCombos);
+		for(let key = 0; key < keys.length; key++) {
+			const curr = this._rowCombos[key];
+			for(let rowScore = 0; rowScore < curr.length; rowScore++) {
+				//Uses a bitwise operator to compare the score with the rows value
+				if((score & curr[rowScore]) === curr[rowScore] && this._filled.indexOf(key) === -1) {
+					return key;
+				}
 			}
-		} return false;
+		}
+		//console.log(null);
+		return null;
 	}
 
-	isDiagonal(num1,num2) {
-		return ((num1 === 1 && num2 === 4) || 
-				(num1 === 4 && num2 === 1) || 
-				(num1 === 2 && num2 === 3) || 
-				(num1 === 3 && num2 === 2));
-	}
+	//These functions return a square that meets the criteria provided by the initial square
   
-	diagonal(num) {
-		return (num === 1 ? 4 :
-				num === 4 ? 1 :
-				num === 2 ? 3 :
-				num === 3 ? 2 : false);
-	}
-  
-	verticalRow(num) {
-		return (num === 1 ? 3 :
-				num === 3 ? 1 :
-				num === 2 ? 4 :
-				num === 4 ? 2 : false);
+	diagonalTo(num) {
+		const options = {1: 4, 4: 1, 2: 3, 3: 2};
+		return options[num] || false;
 	}
 
-	horizontalRow(num) {
-		return (num === 1 ? 2 :
-				num === 2 ? 1 :
-				num === 3 ? 4 :
-				num === 4 ? 3 : false);
-	}
-  
-	adjacent(num) {
-		return (num === 5 || num === 6 ? 1 :
-				num === 7 || num === 8 ? 4 : false);
-	}
-  
-	horzAdj(num1, num2) {
-		return ((num1 === 1 || num1 === 2) && (num2 === 5) ? true :
-				(num1 === 3 || num1 === 4) && (num2 === 8) ? true : false);
+	verticalTo(num) {
+		const options = {1: 3, 3: 1, 2: 4, 4: 2};
+		return options[num] || false;
 	}
 
-	vertAdj(num1, num2) {
-		return ((num1 === 1 || num1 === 3) && (num2 === 6) ? true :
-				(num1 === 2 || num1 === 4) && (num2 === 7) ? true : false);
+	horizontalTo(num) {
+		const options = {1: 2, 2: 1, 3: 4, 4: 3};
+		return options[num] || false;
 	}
+  
+	adjacentTo(num) {
+		const options = {5: 1, 6: 1, 7: 4, 8: 4};
+		return options[num] || false;
+	}
+
+	//These functions return information about the relative position of the given squares
+	
+  
+	isHorzAdj(num1, num2) {
+		const options = {
+			5: {1: true, 2: true},
+			8: {3: true, 4: true}
+		};
+		return options[num2] && options[num2][num1] || false;
+	}
+
+	isVertAdj(num1, num2) {
+		const options = {
+			6: { 1: true, 3: true },
+			7: { 2: true, 4: true }
+		};
+		return options[num2] && options[num2][num1] || false;
+	}
+
+	// Utility functions
 
 	getRandom(min, max) {
 		let random;
 		do {
-			random = Math.floor((Math.random() * (max - min) + min));
+			random = Math.floor((Math.random() * (max - min + 1) + min));
 		} while (this._filled.indexOf(random) != -1);
 		return random;
+	}
+
+	getRandomSquare() {
+		return this.getRandom(0, 9);
+	}
+
+	getRandomCornerSquare() {
+		return this.getRandom(1, 4);
+	}
+
+	getRandomCornerSquareOrCenter() {
+		return this.getRandom(0, 4);
+	}
+
+	getRandomSideSquare() {
+		return this.getRandom(5, 9);
+	}
+
+	isOccupied(num) {
+		return this._filled.indexOf(num) > -1;
+	}
+
+	isCornerSquare(num) {
+		return num > 0 && num < 5;
+	}
+
+	isSideSquare(num) {
+		return num >= 5;
 	}
 }
 
