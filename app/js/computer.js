@@ -1,5 +1,39 @@
 import Player from "./player.js";
 
+//			Squares by Index (center = 0, corner squares < 5, side squares >= 5)
+//			 ___ ___ ___
+//			| 1 | 5 | 2 |
+//			 ~ ~ ~ ~ ~ ~ 			
+//			| 6 | 0 | 7 |
+//			 ~ ~ ~ ~ ~ ~
+//			| 3 | 8 | 4 |
+//			 ~ ~ ~ ~ ~ ~
+//
+//			Squares by value ( 2 ^ index)
+//			 ___ ___ ___
+//			| 2 | 32| 4 |
+//			 ~ ~ ~ ~ ~ ~ 			
+//			| 64| 1 |128|
+//			 ~ ~ ~ ~ ~ ~
+//			| 8 |256| 16|
+//			 ~ ~ ~ ~ ~ ~
+//
+//			Any combination of squares has a unique sum value.
+//			
+//			The computer can tell if a row is about to be completed by using a bitwise AND operator
+//			to compare the player or computer's score with a row's value.
+//			
+//			For example, for index 5, there are two ways to win with that square -->
+//				1) 1 - 5 - 2 --> value = (2 ^ 1) + (2 ^ 5) + (2 ^ 2) = 38
+//				2) 5 - 0 - 8 --> value = (2 ^ 5) + (2 ^ 0) + (2 ^ 8) = 289
+//					
+//					The value of those rows if 5 is not filled in yet -> 
+//						1) 38 - (2 ^ 5) = 6
+//						2) 289 - (2 ^ 5) = 257
+//
+//			If either the player or computer's scores match 6 or 257 using a bitwise AND, 
+//			the rowDetector fxn returns the index of the (missing) 5 square (if not occupied by the other player).
+
 
 export default class Computer extends Player {
 	constructor(symbol) {
@@ -7,31 +41,31 @@ export default class Computer extends Player {
 		//The computers list of occupied squares
 		this._filled = [];
 
-		//they keys represent square indices,
-		//the keys array values represent scores for each row or column running through that square
-		this._rowCombos = {
-			0: [12, 18, 192, 288],
-			1: [17, 36, 72],
-			2: [9, 34, 144],
-			3: [5, 66, 272],
-			4: [3, 132, 264],
-			5: [6, 257],
-			6: [10, 129],
-			7: [20, 65],
-			8: [24, 33]
-		};
+		//they indices represent square indices,
+		//the array values represent scores for each row or column running through that square index
+		this._rowCombos = [
+			[12, 18, 192, 288],
+			[17, 36, 72],
+			[9, 34, 144],
+			[5, 66, 272],
+			[3, 132, 264],
+			[6, 257],
+			[10, 129],
+			[20, 65],
+			[24, 33]
+		];
 
-		this.movesList = {
-			1: this.getRandomCornerSquare.bind(this),
-			2: this.secondMove.bind(this),
-			3: this.thirdMove.bind(this),
-			4: this.fourthMove.bind(this),
-			5: this.laterMoves.bind(this),
-			6: this.laterMoves.bind(this),
-			7: this.laterMoves.bind(this),
-			8: this.laterMoves.bind(this),
-			9: this.laterMoves.bind(this)
-		};
+		this.movesList = [
+			this.getRandomCornerSquare.bind(this),
+			this.secondMove.bind(this),
+			this.thirdMove.bind(this),
+			this.fourthMove.bind(this),
+			this.laterMoves.bind(this),
+			this.laterMoves.bind(this),
+			this.laterMoves.bind(this),
+			this.laterMoves.bind(this),
+			this.laterMoves.bind(this)
+		];
 	}
 
 
@@ -43,7 +77,7 @@ export default class Computer extends Player {
 			}
 		}
 		// A table which tells the computer which function to use depending on the moveNumber
-		const index = this.movesList[moveNumber](playerScore); 	
+		const index = this.movesList[moveNumber - 1](playerScore); 	
 		this._filled.push(index);
 		return index;
 	}
@@ -101,9 +135,8 @@ export default class Computer extends Player {
 
 	rowDetector(score) {
 		//Iterates through rowCombos values and checks for a match bit-match with score
-		//if a value matches score, the key of that value (the square index) is returned
-		const keys = Object.keys(this._rowCombos);
-		for(let key = 0; key < keys.length; key++) {
+		//if a value matches score, the index of that value (the square index) is returned
+		for(let key = 0; key < this._rowCombos.length; key++) {
 			const curr = this._rowCombos[key];
 			for(let rowScore = 0; rowScore < curr.length; rowScore++) {
 				//Uses a bitwise operator to compare the score with the rows value
