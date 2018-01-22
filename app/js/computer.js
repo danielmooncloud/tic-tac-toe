@@ -128,7 +128,7 @@ export default class Computer extends Player {
 		else if(rowsToBlock !== null) return rowsToBlock;
 		else if(this.isHorzAdj(num1, num2)) return this.verticalTo(num1);
 		else if(this.isVertAdj(num1, num2)) return this.horizontalTo(num1);
-		else if(this.isCornerSquare(num1) && this.isCornerSquare(num2) && !this.isSideSquare(num3)) return this.getRandomCornerSquare();	
+		else if(this.isCornerSquare(num1) && this.isCornerSquare(num2) && !this.isSideSquare(num3)) return this.getRandomCornerSquare();
 		else return this.getRandomSquare();
 	}
 
@@ -201,7 +201,7 @@ export default class Computer extends Player {
 	}
 
 	getRandomSquare() {
-		return this.getRandom(0, 9);
+		return this.getRandom(0, 8);
 	}
 
 	getRandomCornerSquare() {
@@ -213,7 +213,7 @@ export default class Computer extends Player {
 	}
 
 	getRandomSideSquare() {
-		return this.getRandom(5, 9);
+		return this.getRandom(5, 8);
 	}
 
 	isOccupied(num) {

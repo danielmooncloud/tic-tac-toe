@@ -90,7 +90,7 @@ export default class Game {
 		}
 		setTimeout(() => {
 			pubSub.publish("renderMessage", message);
-		}, 1000);
+		}, 500);
 		this.gameEnded = true;
 	}
 

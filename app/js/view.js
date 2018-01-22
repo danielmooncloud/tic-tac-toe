@@ -7,7 +7,8 @@ export default class View {
 		this.bindEvents();
 		this.renderNewGame();
 	}
-  
+
+
 	cacheDom() {
 		this.$main = $(".main");
 		this.$popBackground = $("#pop_background");
@@ -20,7 +21,8 @@ export default class View {
 		this.$yes = this.$gameBox.find("#yes");
 		this.$no = this.$gameBox.find("#no");
 	}
-  
+
+
 	bindEvents() {
 		pubSub.subscribe("renderSquare", ({symbol, index}) => {
 			this.renderSquare({symbol, index});
@@ -44,33 +46,39 @@ export default class View {
 			this.handleNo();
 		});
 	}
-  
+
+
 	renderSquare({symbol, index}) {
 		$("#" + index).text(symbol);
 	}
-  
+
+
 	renderNewGame() {
 		this.$popBackground.fadeIn();
 		this.$popBox.fadeIn("slow");
 		this.$square.text("");
 	}
-  
-	renderMessage(string) {
+
+
+	renderMessage(message) {
 		this.$popBackground.fadeIn();
-		this.$gameBoxText.html(string);
+		this.$gameBoxText.html(message);
 		this.$gameBox.fadeIn("slow");  
 	}
-  
+
+
 	handleClickedSquare(index) {
 		pubSub.publish("playerTurn", index);
 	}
   
+
 	handleRestart() {
 		this.$gameBox.fadeOut("slow");
 		setTimeout(() => {
 			pubSub.publish("resetGame", null);
 		}, 1000);  
 	}
+
 
 	handleNo() {
 		this.$gameBox.fadeOut("slow");
@@ -84,7 +92,8 @@ export default class View {
 			pubSub.publish("resetGame", null);
 		}, 3000);
 	}
- 
+
+
 	handleSymbol(value) {
 		this.$popBackground.fadeOut();
 		this.$popBox.fadeOut();
