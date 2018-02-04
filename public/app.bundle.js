@@ -6,9 +6,9 @@
 /******/ 	function __webpack_require__(moduleId) {
 /******/
 /******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
+/******/ 		if(installedModules[moduleId]) {
 /******/ 			return installedModules[moduleId].exports;
-/******/
+/******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			i: moduleId,
@@ -32,9 +32,6 @@
 /******/
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// identity function for calling harmony imports with the correct context
-/******/ 	__webpack_require__.i = function(value) { return value; };
 /******/
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
@@ -63,203 +60,11 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 7);
+/******/ 	return __webpack_require__(__webpack_require__.s = 3);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Player = function () {
-	function Player(symbol) {
-		_classCallCheck(this, Player);
-
-		this._symbol = symbol;
-		this._score = 0;
-		this._threeinaRow = [38, 193, 280, 74, 289, 148, 19, 13];
-	}
-
-	_createClass(Player, [{
-		key: "updateScore",
-		value: function updateScore(points) {
-			this._score += points;
-		}
-	}, {
-		key: "resetScore",
-		value: function resetScore() {
-			this._score = 0;
-		}
-	}, {
-		key: "isWinner",
-		value: function isWinner() {
-			for (var i = 0; i < this._threeinaRow.length; i++) {
-				if ((this._threeinaRow[i] & this.score) === this._threeinaRow[i]) {
-					return true;
-				}
-			}return false;
-		}
-	}, {
-		key: "symbol",
-		get: function get() {
-			return this._symbol;
-		}
-	}, {
-		key: "score",
-		get: function get() {
-			return this._score;
-		}
-	}]);
-
-	return Player;
-}();
-
-exports.default = Player;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _board = __webpack_require__(4);
-
-var _board2 = _interopRequireDefault(_board);
-
-var _player = __webpack_require__(0);
-
-var _player2 = _interopRequireDefault(_player);
-
-var _computer = __webpack_require__(5);
-
-var _computer2 = _interopRequireDefault(_computer);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var Game = function () {
-	function Game() {
-		_classCallCheck(this, Game);
-
-		this.board = new _board2.default();
-		this.gameEnded = false;
-		this.moveNumber = 1;
-	}
-
-	_createClass(Game, [{
-		key: "init",
-		value: function init(view) {
-			this.view = view;
-			this.view.init();
-		}
-	}, {
-		key: "selectSymbol",
-		value: function selectSymbol(char) {
-			if (char === "X") {
-				this.computer = new _computer2.default("O");
-				this.player = new _player2.default("X");
-				this.currentPlayer = this.player;
-			} else if (char === "O") {
-				this.computer = new _computer2.default("X");
-				this.player = new _player2.default("O");
-				this.currentPlayer = this.computer;
-				this.executeMove(this.computerTurn(), this.player);
-			}
-		}
-	}, {
-		key: "currentSymbol",
-		value: function currentSymbol() {
-			return this.currentPlayer.symbol;
-		}
-	}, {
-		key: "playerScore",
-		value: function playerScore() {
-			return this.player.score;
-		}
-	}, {
-		key: "computerTurn",
-		value: function computerTurn() {
-			return this.currentPlayer.move(this.moveNumber, this.board.squares, this.playerScore());
-		}
-	}, {
-		key: "playerTurn",
-		value: function playerTurn(index) {
-			var _this = this;
-
-			this.executeMove(index, this.computer);
-			setTimeout(function () {
-				if (!_this.gameEnded && _this.currentPlayer === _this.computer) {
-					_this.executeMove(_this.computerTurn(), _this.player);
-				}
-			}, 1000);
-		}
-	}, {
-		key: "executeMove",
-		value: function executeMove(index, opposingPlayer) {
-			if (!this.gameEnded && this.currentPlayer != opposingPlayer && this.board.isSquareEmpty(index)) {
-				this.board.setSquareOccupied(index);
-				this.currentPlayer.updateScore(this.board.getValue(index));
-				this.moveNumber += 1;
-				this.view.render(this.currentSymbol(), index);
-				this.ifOver();
-				this.currentPlayer = opposingPlayer;
-			}
-		}
-	}, {
-		key: "ifOver",
-		value: function ifOver() {
-			var _this2 = this;
-
-			var message = void 0;
-			if (this.currentPlayer.isWinner()) {
-				message = this.currentPlayer === this.player ? "You Win!" : "You Lose!";
-			} else if (this.board.isAllFilledIn()) {
-				message = "Tie Game!";
-			} else {
-				return false;
-			}
-			setTimeout(function () {
-				_this2.view.renderGame(message);
-			}, 1000);
-			this.gameEnded = true;
-		}
-	}, {
-		key: "resetGame",
-		value: function resetGame() {
-			this.board.resetSquares();
-			this.player.resetScore();
-			this.computer.resetScore();
-			this.gameEnded = false;
-			this.moveNumber = 1;
-			this.view.renderNew();
-		}
-	}]);
-
-	return Game;
-}();
-
-exports.default = Game;
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -268,7 +73,7 @@ exports.default = Game;
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 /*!
- * jQuery JavaScript Library v3.2.1
+ * jQuery JavaScript Library v3.3.1
  * https://jquery.com/
  *
  * Includes Sizzle.js
@@ -278,7 +83,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
  * Released under the MIT license
  * https://jquery.org/license
  *
- * Date: 2017-03-20T18:59Z
+ * Date: 2018-01-20T17:24Z
  */
 (function (global, factory) {
 
@@ -338,20 +143,56 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	var support = {};
 
-	function DOMEval(code, doc) {
+	var isFunction = function isFunction(obj) {
+
+		// Support: Chrome <=57, Firefox <=52
+		// In some browsers, typeof returns "function" for HTML <object> elements
+		// (i.e., `typeof document.createElement( "object" ) === "function"`).
+		// We don't want to classify *any* DOM node as a function.
+		return typeof obj === "function" && typeof obj.nodeType !== "number";
+	};
+
+	var isWindow = function isWindow(obj) {
+		return obj != null && obj === obj.window;
+	};
+
+	var preservedScriptAttributes = {
+		type: true,
+		src: true,
+		noModule: true
+	};
+
+	function DOMEval(code, doc, node) {
 		doc = doc || document;
 
-		var script = doc.createElement("script");
+		var i,
+		    script = doc.createElement("script");
 
 		script.text = code;
+		if (node) {
+			for (i in preservedScriptAttributes) {
+				if (node[i]) {
+					script[i] = node[i];
+				}
+			}
+		}
 		doc.head.appendChild(script).parentNode.removeChild(script);
+	}
+
+	function toType(obj) {
+		if (obj == null) {
+			return obj + "";
+		}
+
+		// Support: Android <=2.3 only (functionish RegExp)
+		return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" || typeof obj === "function" ? class2type[toString.call(obj)] || "object" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
 	}
 	/* global Symbol */
 	// Defining this global in .eslintrc.json would create a danger of using the global
 	// unguarded in another place, it seems safer to define global only for this module
 
 
-	var version = "3.2.1",
+	var version = "3.3.1",
 
 
 	// Define a local copy of jQuery
@@ -365,18 +206,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	// Support: Android <=4.0 only
 	// Make sure we trim BOM and NBSP
-	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,
-
-
-	// Matches dashed string for camelizing
-	rmsPrefix = /^-ms-/,
-	    rdashAlpha = /-([a-z])/g,
-
-
-	// Used by jQuery.camelCase as callback to replace()
-	fcamelCase = function fcamelCase(all, letter) {
-		return letter.toUpperCase();
-	};
+	rtrim = /^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g;
 
 	jQuery.fn = jQuery.prototype = {
 
@@ -481,7 +311,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 
 		// Handle case when target is a string or something (possible in deep copy)
-		if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !jQuery.isFunction(target)) {
+		if ((typeof target === "undefined" ? "undefined" : _typeof(target)) !== "object" && !isFunction(target)) {
 			target = {};
 		}
 
@@ -545,28 +375,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		noop: function noop() {},
 
-		isFunction: function isFunction(obj) {
-			return jQuery.type(obj) === "function";
-		},
-
-		isWindow: function isWindow(obj) {
-			return obj != null && obj === obj.window;
-		},
-
-		isNumeric: function isNumeric(obj) {
-
-			// As of jQuery 3.0, isNumeric is limited to
-			// strings and numbers (primitives or objects)
-			// that can be coerced to finite numbers (gh-2662)
-			var type = jQuery.type(obj);
-			return (type === "number" || type === "string") &&
-
-			// parseFloat NaNs numeric-cast false positives ("")
-			// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
-			// subtraction forces infinities to NaN
-			!isNaN(obj - parseFloat(obj));
-		},
-
 		isPlainObject: function isPlainObject(obj) {
 			var proto, Ctor;
 
@@ -600,25 +408,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return true;
 		},
 
-		type: function type(obj) {
-			if (obj == null) {
-				return obj + "";
-			}
-
-			// Support: Android <=2.3 only (functionish RegExp)
-			return (typeof obj === "undefined" ? "undefined" : _typeof(obj)) === "object" || typeof obj === "function" ? class2type[toString.call(obj)] || "object" : typeof obj === "undefined" ? "undefined" : _typeof(obj);
-		},
-
 		// Evaluates a script in a global context
 		globalEval: function globalEval(code) {
 			DOMEval(code);
-		},
-
-		// Convert dashed to camelCase; used by the css and data modules
-		// Support: IE <=9 - 11, Edge 12 - 13
-		// Microsoft forgot to hump their vendor prefix (#9572)
-		camelCase: function camelCase(string) {
-			return string.replace(rmsPrefix, "ms-").replace(rdashAlpha, fcamelCase);
 		},
 
 		each: function each(obj, callback) {
@@ -738,37 +530,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		// A global GUID counter for objects
 		guid: 1,
 
-		// Bind a function to a context, optionally partially applying any
-		// arguments.
-		proxy: function proxy(fn, context) {
-			var tmp, args, proxy;
-
-			if (typeof context === "string") {
-				tmp = fn[context];
-				context = fn;
-				fn = tmp;
-			}
-
-			// Quick check to determine if target is callable, in the spec
-			// this throws a TypeError, but we will just return undefined.
-			if (!jQuery.isFunction(fn)) {
-				return undefined;
-			}
-
-			// Simulated bind
-			args = _slice.call(arguments, 2);
-			proxy = function proxy() {
-				return fn.apply(context || this, args.concat(_slice.call(arguments)));
-			};
-
-			// Set the guid of unique handler to the same of original handler, so it can be removed
-			proxy.guid = fn.guid = fn.guid || jQuery.guid++;
-
-			return proxy;
-		},
-
-		now: Date.now,
-
 		// jQuery.support is not used in Core but other projects attach their
 		// properties to it so it needs to exist.
 		support: support
@@ -790,9 +551,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		// hasOwn isn't used here due to false negatives
 		// regarding Nodelist length in IE
 		var length = !!obj && "length" in obj && obj.length,
-		    type = jQuery.type(obj);
+		    type = toType(obj);
 
-		if (type === "function" || jQuery.isWindow(obj)) {
+		if (isFunction(obj) || isWindow(obj)) {
 			return false;
 		}
 
@@ -2999,11 +2760,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	};
 	var rsingleTag = /^<([a-z][^\/\0>:\x20\t\r\n\f]*)[\x20\t\r\n\f]*\/?>(?:<\/\1>|)$/i;
 
-	var risSimple = /^.[^:#\[\.,]*$/;
-
 	// Implement the identical functionality for filter and not
 	function winnow(elements, qualifier, not) {
-		if (jQuery.isFunction(qualifier)) {
+		if (isFunction(qualifier)) {
 			return jQuery.grep(elements, function (elem, i) {
 				return !!qualifier.call(elem, i, elem) !== not;
 			});
@@ -3023,16 +2782,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			});
 		}
 
-		// Simple selector that can be filtered directly, removing non-Elements
-		if (risSimple.test(qualifier)) {
-			return jQuery.filter(qualifier, elements, not);
-		}
-
-		// Complex selector, compare the two sets, removing non-Elements
-		qualifier = jQuery.filter(qualifier, elements);
-		return jQuery.grep(elements, function (elem) {
-			return indexOf.call(qualifier, elem) > -1 !== not && elem.nodeType === 1;
-		});
+		// Filtered directly for both simple and complex selectors
+		return jQuery.filter(qualifier, elements, not);
 	}
 
 	jQuery.filter = function (expr, elems, not) {
@@ -3141,7 +2892,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						for (match in context) {
 
 							// Properties of context are called as methods if possible
-							if (jQuery.isFunction(this[match])) {
+							if (isFunction(this[match])) {
 								this[match](context[match]);
 
 								// ...and otherwise set as attributes
@@ -3184,7 +2935,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 			// HANDLE: $(function)
 			// Shortcut for document ready
-		} else if (jQuery.isFunction(selector)) {
+		} else if (isFunction(selector)) {
 			return root.ready !== undefined ? root.ready(selector) :
 
 			// Execute immediately if ready is not present
@@ -3492,11 +3243,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					(function add(args) {
 						jQuery.each(args, function (_, arg) {
-							if (jQuery.isFunction(arg)) {
+							if (isFunction(arg)) {
 								if (!options.unique || !self.has(arg)) {
 									list.push(arg);
 								}
-							} else if (arg && arg.length && jQuery.type(arg) !== "string") {
+							} else if (arg && arg.length && toType(arg) !== "string") {
 
 								// Inspect recursively
 								add(arg);
@@ -3608,11 +3359,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		try {
 
 			// Check for promise aspect first to privilege synchronous behavior
-			if (value && jQuery.isFunction(method = value.promise)) {
+			if (value && isFunction(method = value.promise)) {
 				method.call(value).done(resolve).fail(reject);
 
 				// Other thenables
-			} else if (value && jQuery.isFunction(method = value.then)) {
+			} else if (value && isFunction(method = value.then)) {
 				method.call(value, resolve, reject);
 
 				// Other non-thenables
@@ -3664,14 +3415,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						jQuery.each(tuples, function (i, tuple) {
 
 							// Map tuples (progress, done, fail) to arguments (done, fail, progress)
-							var fn = jQuery.isFunction(fns[tuple[4]]) && fns[tuple[4]];
+							var fn = isFunction(fns[tuple[4]]) && fns[tuple[4]];
 
 							// deferred.progress(function() { bind to newDefer or newDefer.notify })
 							// deferred.done(function() { bind to newDefer or newDefer.resolve })
 							// deferred.fail(function() { bind to newDefer or newDefer.reject })
 							deferred[tuple[1]](function () {
 								var returned = fn && fn.apply(this, arguments);
-								if (returned && jQuery.isFunction(returned.promise)) {
+								if (returned && isFunction(returned.promise)) {
 									returned.promise().progress(newDefer.notify).done(newDefer.resolve).fail(newDefer.reject);
 								} else {
 									newDefer[tuple[0] + "With"](this, fn ? [returned] : arguments);
@@ -3717,7 +3468,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 								(typeof returned === "undefined" ? "undefined" : _typeof(returned)) === "object" || typeof returned === "function") && returned.then;
 
 								// Handle a returned thenable
-								if (jQuery.isFunction(then)) {
+								if (isFunction(then)) {
 
 									// Special processors (notify) just wait for resolution
 									if (special) {
@@ -3797,13 +3548,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					return jQuery.Deferred(function (newDefer) {
 
 						// progress_handlers.add( ... )
-						tuples[0][3].add(resolve(0, newDefer, jQuery.isFunction(onProgress) ? onProgress : Identity, newDefer.notifyWith));
+						tuples[0][3].add(resolve(0, newDefer, isFunction(onProgress) ? onProgress : Identity, newDefer.notifyWith));
 
 						// fulfilled_handlers.add( ... )
-						tuples[1][3].add(resolve(0, newDefer, jQuery.isFunction(onFulfilled) ? onFulfilled : Identity));
+						tuples[1][3].add(resolve(0, newDefer, isFunction(onFulfilled) ? onFulfilled : Identity));
 
 						// rejected_handlers.add( ... )
-						tuples[2][3].add(resolve(0, newDefer, jQuery.isFunction(onRejected) ? onRejected : Thrower));
+						tuples[2][3].add(resolve(0, newDefer, isFunction(onRejected) ? onRejected : Thrower));
 					}).promise();
 				},
 
@@ -3838,8 +3589,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					// fulfilled_callbacks.disable
 					tuples[3 - i][2].disable,
 
+					// rejected_handlers.disable
+					// fulfilled_handlers.disable
+					tuples[3 - i][3].disable,
+
 					// progress_callbacks.lock
-					tuples[0][2].lock);
+					tuples[0][2].lock,
+
+					// progress_handlers.lock
+					tuples[0][3].lock);
 				}
 
 				// progress_handlers.fire
@@ -3910,7 +3668,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				adoptValue(singleValue, master.done(updateFunc(i)).resolve, master.reject, !remaining);
 
 				// Use .then() to unwrap secondary thenables (cf. gh-3000)
-				if (master.state() === "pending" || jQuery.isFunction(resolveValues[i] && resolveValues[i].then)) {
+				if (master.state() === "pending" || isFunction(resolveValues[i] && resolveValues[i].then)) {
 
 					return master.then();
 				}
@@ -4025,7 +3783,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    bulk = key == null;
 
 		// Sets many values
-		if (jQuery.type(key) === "object") {
+		if (toType(key) === "object") {
 			chainable = true;
 			for (i in key) {
 				access(elems, fn, i, key[i], true, emptyGet, raw);
@@ -4035,7 +3793,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		} else if (value !== undefined) {
 			chainable = true;
 
-			if (!jQuery.isFunction(value)) {
+			if (!isFunction(value)) {
 				raw = true;
 			}
 
@@ -4073,6 +3831,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		return len ? fn(elems[0], key) : emptyGet;
 	};
+
+	// Matches dashed string for camelizing
+	var rmsPrefix = /^-ms-/,
+	    rdashAlpha = /-([a-z])/g;
+
+	// Used by camelCase as callback to replace()
+	function fcamelCase(all, letter) {
+		return letter.toUpperCase();
+	}
+
+	// Convert dashed to camelCase; used by the css and data modules
+	// Support: IE <=9 - 11, Edge 12 - 15
+	// Microsoft forgot to hump their vendor prefix (#9572)
+	function camelCase(string) {
+		return string.replace(rmsPrefix, "ms-").replace(rdashAlpha, fcamelCase);
+	}
 	var acceptData = function acceptData(owner) {
 
 		// Accepts only:
@@ -4132,14 +3906,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			// Handle: [ owner, key, value ] args
 			// Always use camelCase key (gh-2257)
 			if (typeof data === "string") {
-				cache[jQuery.camelCase(data)] = value;
+				cache[camelCase(data)] = value;
 
 				// Handle: [ owner, { properties } ] args
 			} else {
 
 				// Copy the properties one-by-one to the cache object
 				for (prop in data) {
-					cache[jQuery.camelCase(prop)] = data[prop];
+					cache[camelCase(prop)] = data[prop];
 				}
 			}
 			return cache;
@@ -4148,7 +3922,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return key === undefined ? this.cache(owner) :
 
 			// Always use camelCase key (gh-2257)
-			owner[this.expando] && owner[this.expando][jQuery.camelCase(key)];
+			owner[this.expando] && owner[this.expando][camelCase(key)];
 		},
 		access: function access(owner, key, value) {
 
@@ -4195,9 +3969,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					// If key is an array of keys...
 					// We always set camelCase keys, so remove that.
-					key = key.map(jQuery.camelCase);
+					key = key.map(camelCase);
 				} else {
-					key = jQuery.camelCase(key);
+					key = camelCase(key);
 
 					// If a key with the spaces exists, use it.
 					// Otherwise, create an array by matching non-whitespace
@@ -4341,7 +4115,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 							if (attrs[i]) {
 								name = attrs[i].name;
 								if (name.indexOf("data-") === 0) {
-									name = jQuery.camelCase(name.slice(5));
+									name = camelCase(name.slice(5));
 									dataAttr(elem, name, data[name]);
 								}
 							}
@@ -4580,7 +4354,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	function adjustCSS(elem, prop, valueParts, tween) {
 		var adjusted,
-		    scale = 1,
+		    scale,
 		    maxIterations = 20,
 		    currentValue = tween ? function () {
 			return tween.cur();
@@ -4596,28 +4370,32 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		if (initialInUnit && initialInUnit[3] !== unit) {
 
+			// Support: Firefox <=54
+			// Halve the iteration target value to prevent interference from CSS upper bounds (gh-2144)
+			initial = initial / 2;
+
 			// Trust units reported by jQuery.css
 			unit = unit || initialInUnit[3];
-
-			// Make sure we update the tween properties later on
-			valueParts = valueParts || [];
 
 			// Iteratively approximate from a nonzero starting point
 			initialInUnit = +initial || 1;
 
-			do {
+			while (maxIterations--) {
 
-				// If previous iteration zeroed out, double until we get *something*.
-				// Use string for doubling so we don't accidentally see scale as unchanged below
-				scale = scale || ".5";
-
-				// Adjust and apply
-				initialInUnit = initialInUnit / scale;
+				// Evaluate and update our best guess (doubling guesses that zero out).
+				// Finish if the scale equals or crosses 1 (making the old*new product non-positive).
 				jQuery.style(elem, prop, initialInUnit + unit);
+				if ((1 - scale) * (1 - (scale = currentValue() / initial || 0.5)) <= 0) {
+					maxIterations = 0;
+				}
+				initialInUnit = initialInUnit / scale;
+			}
 
-				// Update scale, tolerating zero or NaN from tween.cur()
-				// Break the loop if scale is unchanged or perfect, or if we've just had enough.
-			} while (scale !== (scale = currentValue() / initial) && scale !== 1 && --maxIterations);
+			initialInUnit = initialInUnit * 2;
+			jQuery.style(elem, prop, initialInUnit + unit);
+
+			// Make sure we update the tween properties later on
+			valueParts = valueParts || [];
 		}
 
 		if (valueParts) {
@@ -4733,7 +4511,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	var rtagName = /<([a-z][^\/\0>\x20\t\r\n\f]+)/i;
 
-	var rscriptType = /^$|\/(?:java|ecma)script/i;
+	var rscriptType = /^$|^module$|\/(?:java|ecma)script/i;
 
 	// We have to close these tags to support XHTML (#13200)
 	var wrapMap = {
@@ -4809,7 +4587,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			if (elem || elem === 0) {
 
 				// Add nodes directly
-				if (jQuery.type(elem) === "object") {
+				if (toType(elem) === "object") {
 
 					// Support: Android <=4.0 only, PhantomJS 1 only
 					// push.apply(_, arraylike) throws on ancient WebKit
@@ -5327,7 +5105,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				enumerable: true,
 				configurable: true,
 
-				get: jQuery.isFunction(hook) ? function () {
+				get: isFunction(hook) ? function () {
 					if (this.originalEvent) {
 						return hook(this.originalEvent);
 					}
@@ -5453,7 +5231,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 
 		// Create a timestamp if incoming event doesn't have one
-		this.timeStamp = src && src.timeStamp || jQuery.now();
+		this.timeStamp = src && src.timeStamp || Date.now();
 
 		// Mark it as fixed
 		this[jQuery.expando] = true;
@@ -5646,7 +5424,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	/* eslint-enable */
 
-	// Support: IE <=10 - 11, Edge 12 - 13
+	// Support: IE <=10 - 11, Edge 12 - 13 only
 	// In IE/Edge using regex groups here causes severe slowdowns.
 	// See https://connect.microsoft.com/IE/feedback/details/1736512/
 	rnoInnerhtml = /<script|<style|<link/i,
@@ -5654,14 +5432,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	// checked="checked" or checked
 	rchecked = /checked\s*(?:[^=]|=\s*.checked.)/i,
-	    rscriptTypeMasked = /^true\/(.*)/,
 	    rcleanScript = /^\s*<!(?:\[CDATA\[|--)|(?:\]\]|--)>\s*$/g;
 
 	// Prefer a tbody over its parent table for containing new rows
 	function manipulationTarget(elem, content) {
 		if (nodeName(elem, "table") && nodeName(content.nodeType !== 11 ? content : content.firstChild, "tr")) {
 
-			return jQuery(">tbody", elem)[0] || elem;
+			return jQuery(elem).children("tbody")[0] || elem;
 		}
 
 		return elem;
@@ -5673,10 +5450,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		return elem;
 	}
 	function restoreScript(elem) {
-		var match = rscriptTypeMasked.exec(elem.type);
-
-		if (match) {
-			elem.type = match[1];
+		if ((elem.type || "").slice(0, 5) === "true/") {
+			elem.type = elem.type.slice(5);
 		} else {
 			elem.removeAttribute("type");
 		}
@@ -5747,13 +5522,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    l = collection.length,
 		    iNoClone = l - 1,
 		    value = args[0],
-		    isFunction = jQuery.isFunction(value);
+		    valueIsFunction = isFunction(value);
 
 		// We can't cloneNode fragments that contain checked, in WebKit
-		if (isFunction || l > 1 && typeof value === "string" && !support.checkClone && rchecked.test(value)) {
+		if (valueIsFunction || l > 1 && typeof value === "string" && !support.checkClone && rchecked.test(value)) {
 			return collection.each(function (index) {
 				var self = collection.eq(index);
-				if (isFunction) {
+				if (valueIsFunction) {
 					args[0] = value.call(this, index, self.html());
 				}
 				domManip(self, args, callback, ignored);
@@ -5805,14 +5580,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 						node = scripts[i];
 						if (rscriptType.test(node.type || "") && !dataPriv.access(node, "globalEval") && jQuery.contains(doc, node)) {
 
-							if (node.src) {
+							if (node.src && (node.type || "").toLowerCase() !== "module") {
 
 								// Optional AJAX dependency, but won't run scripts if not present
 								if (jQuery._evalUrl) {
 									jQuery._evalUrl(node.src);
 								}
 							} else {
-								DOMEval(node.textContent.replace(rcleanScript, ""), doc);
+								DOMEval(node.textContent.replace(rcleanScript, ""), doc, node);
 							}
 						}
 					}
@@ -6093,8 +5868,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return this.pushStack(ret);
 		};
 	});
-	var rmargin = /^margin/;
-
 	var rnumnonpx = new RegExp("^(" + pnum + ")(?!px)[a-z%]+$", "i");
 
 	var getStyles = function getStyles(elem) {
@@ -6111,6 +5884,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		return view.getComputedStyle(elem);
 	};
 
+	var rboxStyle = new RegExp(cssExpand.join("|"), "i");
+
 	(function () {
 
 		// Executing both pixelPosition & boxSizingReliable tests require only one layout
@@ -6122,21 +5897,29 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return;
 			}
 
-			div.style.cssText = "box-sizing:border-box;" + "position:relative;display:block;" + "margin:auto;border:1px;padding:1px;" + "top:1%;width:50%";
-			div.innerHTML = "";
-			documentElement.appendChild(container);
+			container.style.cssText = "position:absolute;left:-11111px;width:60px;" + "margin-top:1px;padding:0;border:0";
+			div.style.cssText = "position:relative;display:block;box-sizing:border-box;overflow:scroll;" + "margin:auto;border:1px;padding:1px;" + "width:60%;top:1%";
+			documentElement.appendChild(container).appendChild(div);
 
 			var divStyle = window.getComputedStyle(div);
 			pixelPositionVal = divStyle.top !== "1%";
 
 			// Support: Android 4.0 - 4.3 only, Firefox <=3 - 44
-			reliableMarginLeftVal = divStyle.marginLeft === "2px";
-			boxSizingReliableVal = divStyle.width === "4px";
+			reliableMarginLeftVal = roundPixelMeasures(divStyle.marginLeft) === 12;
 
-			// Support: Android 4.0 - 4.3 only
+			// Support: Android 4.0 - 4.3 only, Safari <=9.1 - 10.1, iOS <=7.0 - 9.3
 			// Some styles come back with percentage values, even though they shouldn't
-			div.style.marginRight = "50%";
-			pixelMarginRightVal = divStyle.marginRight === "4px";
+			div.style.right = "60%";
+			pixelBoxStylesVal = roundPixelMeasures(divStyle.right) === 36;
+
+			// Support: IE 9 - 11 only
+			// Detect misreporting of content dimensions for box-sizing:border-box elements
+			boxSizingReliableVal = roundPixelMeasures(divStyle.width) === 36;
+
+			// Support: IE 9 only
+			// Detect overflow:scroll screwiness (gh-3699)
+			div.style.position = "absolute";
+			scrollboxSizeVal = div.offsetWidth === 36 || "absolute";
 
 			documentElement.removeChild(container);
 
@@ -6145,9 +5928,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			div = null;
 		}
 
+		function roundPixelMeasures(measure) {
+			return Math.round(parseFloat(measure));
+		}
+
 		var pixelPositionVal,
 		    boxSizingReliableVal,
-		    pixelMarginRightVal,
+		    scrollboxSizeVal,
+		    pixelBoxStylesVal,
 		    reliableMarginLeftVal,
 		    container = document.createElement("div"),
 		    div = document.createElement("div");
@@ -6163,25 +5951,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		div.cloneNode(true).style.backgroundClip = "";
 		support.clearCloneStyle = div.style.backgroundClip === "content-box";
 
-		container.style.cssText = "border:0;width:8px;height:0;top:0;left:-9999px;" + "padding:0;margin-top:1px;position:absolute";
-		container.appendChild(div);
-
 		jQuery.extend(support, {
-			pixelPosition: function pixelPosition() {
-				computeStyleTests();
-				return pixelPositionVal;
-			},
 			boxSizingReliable: function boxSizingReliable() {
 				computeStyleTests();
 				return boxSizingReliableVal;
 			},
-			pixelMarginRight: function pixelMarginRight() {
+			pixelBoxStyles: function pixelBoxStyles() {
 				computeStyleTests();
-				return pixelMarginRightVal;
+				return pixelBoxStylesVal;
+			},
+			pixelPosition: function pixelPosition() {
+				computeStyleTests();
+				return pixelPositionVal;
 			},
 			reliableMarginLeft: function reliableMarginLeft() {
 				computeStyleTests();
 				return reliableMarginLeftVal;
+			},
+			scrollboxSize: function scrollboxSize() {
+				computeStyleTests();
+				return scrollboxSizeVal;
 			}
 		});
 	})();
@@ -6216,7 +6005,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			// but width seems to be reliably pixels.
 			// This is against the CSSOM draft spec:
 			// https://drafts.csswg.org/cssom/#resolved-values
-			if (!support.pixelMarginRight() && rnumnonpx.test(ret) && rmargin.test(name)) {
+			if (!support.pixelBoxStyles() && rnumnonpx.test(ret) && rboxStyle.test(name)) {
 
 				// Remember the original values
 				width = style.width;
@@ -6316,80 +6105,106 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		Math.max(0, matches[2] - (subtract || 0)) + (matches[3] || "px") : value;
 	}
 
-	function augmentWidthOrHeight(elem, name, extra, isBorderBox, styles) {
-		var i,
-		    val = 0;
+	function boxModelAdjustment(elem, dimension, box, isBorderBox, styles, computedVal) {
+		var i = dimension === "width" ? 1 : 0,
+		    extra = 0,
+		    delta = 0;
 
-		// If we already have the right measurement, avoid augmentation
-		if (extra === (isBorderBox ? "border" : "content")) {
-			i = 4;
-
-			// Otherwise initialize for horizontal or vertical properties
-		} else {
-			i = name === "width" ? 1 : 0;
+		// Adjustment may not be necessary
+		if (box === (isBorderBox ? "border" : "content")) {
+			return 0;
 		}
 
 		for (; i < 4; i += 2) {
 
-			// Both box models exclude margin, so add it if we want it
-			if (extra === "margin") {
-				val += jQuery.css(elem, extra + cssExpand[i], true, styles);
+			// Both box models exclude margin
+			if (box === "margin") {
+				delta += jQuery.css(elem, box + cssExpand[i], true, styles);
 			}
 
-			if (isBorderBox) {
+			// If we get here with a content-box, we're seeking "padding" or "border" or "margin"
+			if (!isBorderBox) {
 
-				// border-box includes padding, so remove it if we want content
-				if (extra === "content") {
-					val -= jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+				// Add padding
+				delta += jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+
+				// For "border" or "margin", add border
+				if (box !== "padding") {
+					delta += jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
+
+					// But still keep track of it otherwise
+				} else {
+					extra += jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
 				}
 
-				// At this point, extra isn't border nor margin, so remove border
-				if (extra !== "margin") {
-					val -= jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
-				}
+				// If we get here with a border-box (content + padding + border), we're seeking "content" or
+				// "padding" or "margin"
 			} else {
 
-				// At this point, extra isn't content, so add padding
-				val += jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+				// For "content", subtract padding
+				if (box === "content") {
+					delta -= jQuery.css(elem, "padding" + cssExpand[i], true, styles);
+				}
 
-				// At this point, extra isn't content nor padding, so add border
-				if (extra !== "padding") {
-					val += jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
+				// For "content" or "padding", subtract border
+				if (box !== "margin") {
+					delta -= jQuery.css(elem, "border" + cssExpand[i] + "Width", true, styles);
 				}
 			}
 		}
 
-		return val;
+		// Account for positive content-box scroll gutter when requested by providing computedVal
+		if (!isBorderBox && computedVal >= 0) {
+
+			// offsetWidth/offsetHeight is a rounded sum of content, padding, scroll gutter, and border
+			// Assuming integer scroll gutter, subtract the rest and round down
+			delta += Math.max(0, Math.ceil(elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] - computedVal - delta - extra - 0.5));
+		}
+
+		return delta;
 	}
 
-	function getWidthOrHeight(elem, name, extra) {
+	function getWidthOrHeight(elem, dimension, extra) {
 
 		// Start with computed style
-		var valueIsBorderBox,
-		    styles = getStyles(elem),
-		    val = curCSS(elem, name, styles),
-		    isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box";
+		var styles = getStyles(elem),
+		    val = curCSS(elem, dimension, styles),
+		    isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box",
+		    valueIsBorderBox = isBorderBox;
 
-		// Computed unit is not pixels. Stop here and return.
+		// Support: Firefox <=54
+		// Return a confounding non-pixel value or feign ignorance, as appropriate.
 		if (rnumnonpx.test(val)) {
-			return val;
+			if (!extra) {
+				return val;
+			}
+			val = "auto";
 		}
 
 		// Check for style in case a browser which returns unreliable values
 		// for getComputedStyle silently falls back to the reliable elem.style
-		valueIsBorderBox = isBorderBox && (support.boxSizingReliable() || val === elem.style[name]);
+		valueIsBorderBox = valueIsBorderBox && (support.boxSizingReliable() || val === elem.style[dimension]);
 
-		// Fall back to offsetWidth/Height when value is "auto"
+		// Fall back to offsetWidth/offsetHeight when value is "auto"
 		// This happens for inline elements with no explicit setting (gh-3571)
-		if (val === "auto") {
-			val = elem["offset" + name[0].toUpperCase() + name.slice(1)];
+		// Support: Android <=4.1 - 4.3 only
+		// Also use offsetWidth/offsetHeight for misreported inline dimensions (gh-3602)
+		if (val === "auto" || !parseFloat(val) && jQuery.css(elem, "display", false, styles) === "inline") {
+
+			val = elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)];
+
+			// offsetWidth/offsetHeight provide border-box values
+			valueIsBorderBox = true;
 		}
 
-		// Normalize "", auto, and prepare for extra
+		// Normalize "" and auto
 		val = parseFloat(val) || 0;
 
-		// Use the active box-sizing model to add/subtract irrelevant styles
-		return val + augmentWidthOrHeight(elem, name, extra || (isBorderBox ? "border" : "content"), valueIsBorderBox, styles) + "px";
+		// Adjust for the element's box model
+		return val + boxModelAdjustment(elem, dimension, extra || (isBorderBox ? "border" : "content"), valueIsBorderBox, styles,
+
+		// Provide the current computed size to request scroll gutter calculation (gh-3589)
+		val) + "px";
 	}
 
 	jQuery.extend({
@@ -6428,9 +6243,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		// Add in properties whose names you wish to fix before
 		// setting or getting the value
-		cssProps: {
-			"float": "cssFloat"
-		},
+		cssProps: {},
 
 		// Get and set the style property on a DOM Node
 		style: function style(elem, name, value, extra) {
@@ -6444,7 +6257,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			var ret,
 			    type,
 			    hooks,
-			    origName = jQuery.camelCase(name),
+			    origName = camelCase(name),
 			    isCustomProp = rcustomProp.test(name),
 			    style = elem.style;
 
@@ -6511,7 +6324,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			var val,
 			    num,
 			    hooks,
-			    origName = jQuery.camelCase(name),
+			    origName = camelCase(name),
 			    isCustomProp = rcustomProp.test(name);
 
 			// Make sure that we're working with the right name. We don't
@@ -6549,8 +6362,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 	});
 
-	jQuery.each(["height", "width"], function (i, name) {
-		jQuery.cssHooks[name] = {
+	jQuery.each(["height", "width"], function (i, dimension) {
+		jQuery.cssHooks[dimension] = {
 			get: function get(elem, computed, extra) {
 				if (computed) {
 
@@ -6565,21 +6378,28 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					// Running getBoundingClientRect on a disconnected node
 					// in IE throws an error.
 					!elem.getClientRects().length || !elem.getBoundingClientRect().width) ? swap(elem, cssShow, function () {
-						return getWidthOrHeight(elem, name, extra);
-					}) : getWidthOrHeight(elem, name, extra);
+						return getWidthOrHeight(elem, dimension, extra);
+					}) : getWidthOrHeight(elem, dimension, extra);
 				}
 			},
 
 			set: function set(elem, value, extra) {
 				var matches,
-				    styles = extra && getStyles(elem),
-				    subtract = extra && augmentWidthOrHeight(elem, name, extra, jQuery.css(elem, "boxSizing", false, styles) === "border-box", styles);
+				    styles = getStyles(elem),
+				    isBorderBox = jQuery.css(elem, "boxSizing", false, styles) === "border-box",
+				    subtract = extra && boxModelAdjustment(elem, dimension, extra, isBorderBox, styles);
+
+				// Account for unreliable border-box dimensions by comparing offset* to computed and
+				// faking a content-box to get border and padding (gh-3699)
+				if (isBorderBox && support.scrollboxSize() === styles.position) {
+					subtract -= Math.ceil(elem["offset" + dimension[0].toUpperCase() + dimension.slice(1)] - parseFloat(styles[dimension]) - boxModelAdjustment(elem, dimension, "border", false, styles) - 0.5);
+				}
 
 				// Convert to pixels if value adjustment is needed
 				if (subtract && (matches = rcssNum.exec(value)) && (matches[3] || "px") !== "px") {
 
-					elem.style[name] = value;
-					value = jQuery.css(elem, name);
+					elem.style[dimension] = value;
+					value = jQuery.css(elem, dimension);
 				}
 
 				return setPositiveNumber(elem, value, subtract);
@@ -6618,7 +6438,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			}
 		};
 
-		if (!rmargin.test(prefix)) {
+		if (prefix !== "margin") {
 			jQuery.cssHooks[prefix + suffix].set = setPositiveNumber;
 		}
 	});
@@ -6777,7 +6597,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		window.setTimeout(function () {
 			fxNow = undefined;
 		});
-		return fxNow = jQuery.now();
+		return fxNow = Date.now();
 	}
 
 	// Generate parameters to create a standard animation
@@ -6888,9 +6708,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		// Restrict "overflow" and "display" styles during box animations
 		if (isBox && elem.nodeType === 1) {
 
-			// Support: IE <=9 - 11, Edge 12 - 13
+			// Support: IE <=9 - 11, Edge 12 - 15
 			// Record all 3 overflow attributes because IE does not infer the shorthand
-			// from identically-valued overflowX and overflowY
+			// from identically-valued overflowX and overflowY and Edge just mirrors
+			// the overflowX value there.
 			opts.overflow = [style.overflow, style.overflowX, style.overflowY];
 
 			// Identify a display type, preferring old show/hide data over the CSS cascade
@@ -6998,7 +6819,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		// camelCase, specialEasing and expand cssHook pass
 		for (index in props) {
-			name = jQuery.camelCase(index);
+			name = camelCase(index);
 			easing = specialEasing[name];
 			value = props[index];
 			if (Array.isArray(value)) {
@@ -7124,8 +6945,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		for (; index < length; index++) {
 			result = Animation.prefilters[index].call(animation, elem, props, animation.opts);
 			if (result) {
-				if (jQuery.isFunction(result.stop)) {
-					jQuery._queueHooks(animation.elem, animation.opts.queue).stop = jQuery.proxy(result.stop, result);
+				if (isFunction(result.stop)) {
+					jQuery._queueHooks(animation.elem, animation.opts.queue).stop = result.stop.bind(result);
 				}
 				return result;
 			}
@@ -7133,7 +6954,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 		jQuery.map(props, createTween, animation);
 
-		if (jQuery.isFunction(animation.opts.start)) {
+		if (isFunction(animation.opts.start)) {
 			animation.opts.start.call(elem, animation);
 		}
 
@@ -7160,7 +6981,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		tweener: function tweener(props, callback) {
-			if (jQuery.isFunction(props)) {
+			if (isFunction(props)) {
 				callback = props;
 				props = ["*"];
 			} else {
@@ -7191,9 +7012,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	jQuery.speed = function (speed, easing, fn) {
 		var opt = speed && (typeof speed === "undefined" ? "undefined" : _typeof(speed)) === "object" ? jQuery.extend({}, speed) : {
-			complete: fn || !fn && easing || jQuery.isFunction(speed) && speed,
+			complete: fn || !fn && easing || isFunction(speed) && speed,
 			duration: speed,
-			easing: fn && easing || easing && !jQuery.isFunction(easing) && easing
+			easing: fn && easing || easing && !isFunction(easing) && easing
 		};
 
 		// Go to the end state if fx are off
@@ -7218,7 +7039,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		opt.old = opt.complete;
 
 		opt.complete = function () {
-			if (jQuery.isFunction(opt.old)) {
+			if (isFunction(opt.old)) {
 				opt.old.call(this);
 			}
 
@@ -7377,7 +7198,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    i = 0,
 		    timers = jQuery.timers;
 
-		fxNow = jQuery.now();
+		fxNow = Date.now();
 
 		for (; i < timers.length; i++) {
 			timer = timers[i];
@@ -7704,7 +7525,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	});
 
 	// Strip and collapse whitespace according to HTML spec
-	// https://html.spec.whatwg.org/multipage/infrastructure.html#strip-and-collapse-whitespace
+	// https://infra.spec.whatwg.org/#strip-and-collapse-ascii-whitespace
 	function stripAndCollapse(value) {
 		var tokens = value.match(rnothtmlwhite) || [];
 		return tokens.join(" ");
@@ -7712,6 +7533,16 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	function getClass(elem) {
 		return elem.getAttribute && elem.getAttribute("class") || "";
+	}
+
+	function classesToArray(value) {
+		if (Array.isArray(value)) {
+			return value;
+		}
+		if (typeof value === "string") {
+			return value.match(rnothtmlwhite) || [];
+		}
+		return [];
 	}
 
 	jQuery.fn.extend({
@@ -7725,15 +7556,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    finalValue,
 			    i = 0;
 
-			if (jQuery.isFunction(value)) {
+			if (isFunction(value)) {
 				return this.each(function (j) {
 					jQuery(this).addClass(value.call(this, j, getClass(this)));
 				});
 			}
 
-			if (typeof value === "string" && value) {
-				classes = value.match(rnothtmlwhite) || [];
+			classes = classesToArray(value);
 
+			if (classes.length) {
 				while (elem = this[i++]) {
 					curValue = getClass(elem);
 					cur = elem.nodeType === 1 && " " + stripAndCollapse(curValue) + " ";
@@ -7768,7 +7599,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    finalValue,
 			    i = 0;
 
-			if (jQuery.isFunction(value)) {
+			if (isFunction(value)) {
 				return this.each(function (j) {
 					jQuery(this).removeClass(value.call(this, j, getClass(this)));
 				});
@@ -7778,9 +7609,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return this.attr("class", "");
 			}
 
-			if (typeof value === "string" && value) {
-				classes = value.match(rnothtmlwhite) || [];
+			classes = classesToArray(value);
 
+			if (classes.length) {
 				while (elem = this[i++]) {
 					curValue = getClass(elem);
 
@@ -7810,13 +7641,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		toggleClass: function toggleClass(value, stateVal) {
-			var type = typeof value === "undefined" ? "undefined" : _typeof(value);
+			var type = typeof value === "undefined" ? "undefined" : _typeof(value),
+			    isValidValue = type === "string" || Array.isArray(value);
 
-			if (typeof stateVal === "boolean" && type === "string") {
+			if (typeof stateVal === "boolean" && isValidValue) {
 				return stateVal ? this.addClass(value) : this.removeClass(value);
 			}
 
-			if (jQuery.isFunction(value)) {
+			if (isFunction(value)) {
 				return this.each(function (i) {
 					jQuery(this).toggleClass(value.call(this, i, getClass(this), stateVal), stateVal);
 				});
@@ -7825,12 +7657,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			return this.each(function () {
 				var className, i, self, classNames;
 
-				if (type === "string") {
+				if (isValidValue) {
 
 					// Toggle individual class names
 					i = 0;
 					self = jQuery(this);
-					classNames = value.match(rnothtmlwhite) || [];
+					classNames = classesToArray(value);
 
 					while (className = classNames[i++]) {
 
@@ -7884,7 +7716,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		val: function val(value) {
 			var hooks,
 			    ret,
-			    isFunction,
+			    valueIsFunction,
 			    elem = this[0];
 
 			if (!arguments.length) {
@@ -7909,7 +7741,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return;
 			}
 
-			isFunction = jQuery.isFunction(value);
+			valueIsFunction = isFunction(value);
 
 			return this.each(function (i) {
 				var val;
@@ -7918,7 +7750,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					return;
 				}
 
-				if (isFunction) {
+				if (valueIsFunction) {
 					val = value.call(this, i, jQuery(this).val());
 				} else {
 					val = value;
@@ -8052,7 +7884,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	// Return jQuery for attributes-only inclusion
 
 
-	var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/;
+	support.focusin = "onfocusin" in window;
+
+	var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/,
+	    stopPropagationCallback = function stopPropagationCallback(e) {
+		e.stopPropagation();
+	};
 
 	jQuery.extend(jQuery.event, {
 
@@ -8065,11 +7902,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    ontype,
 			    handle,
 			    special,
+			    lastElement,
 			    eventPath = [elem || document],
 			    type = hasOwn.call(event, "type") ? event.type : event,
 			    namespaces = hasOwn.call(event, "namespace") ? event.namespace.split(".") : [];
 
-			cur = tmp = elem = elem || document;
+			cur = lastElement = tmp = elem = elem || document;
 
 			// Don't do events on text and comment nodes
 			if (elem.nodeType === 3 || elem.nodeType === 8) {
@@ -8115,7 +7953,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 			// Determine event propagation path in advance, per W3C events spec (#9951)
 			// Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
-			if (!onlyHandlers && !special.noBubble && !jQuery.isWindow(elem)) {
+			if (!onlyHandlers && !special.noBubble && !isWindow(elem)) {
 
 				bubbleType = special.delegateType || type;
 				if (!rfocusMorph.test(bubbleType + type)) {
@@ -8135,7 +7973,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			// Fire handlers on the event path
 			i = 0;
 			while ((cur = eventPath[i++]) && !event.isPropagationStopped()) {
-
+				lastElement = cur;
 				event.type = i > 1 ? bubbleType : special.bindType || type;
 
 				// jQuery handler
@@ -8162,7 +8000,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					// Call a native DOM method on the target with the same name as the event.
 					// Don't do default actions on window, that's where global variables be (#6170)
-					if (ontype && jQuery.isFunction(elem[type]) && !jQuery.isWindow(elem)) {
+					if (ontype && isFunction(elem[type]) && !isWindow(elem)) {
 
 						// Don't re-trigger an onFOO event when we call its FOO() method
 						tmp = elem[ontype];
@@ -8173,7 +8011,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 						// Prevent re-triggering of the same event, since we already bubbled it above
 						jQuery.event.triggered = type;
+
+						if (event.isPropagationStopped()) {
+							lastElement.addEventListener(type, stopPropagationCallback);
+						}
+
 						elem[type]();
+
+						if (event.isPropagationStopped()) {
+							lastElement.removeEventListener(type, stopPropagationCallback);
+						}
+
 						jQuery.event.triggered = undefined;
 
 						if (tmp) {
@@ -8213,22 +8061,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			}
 		}
 	});
-
-	jQuery.each(("blur focus focusin focusout resize scroll click dblclick " + "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " + "change select submit keydown keypress keyup contextmenu").split(" "), function (i, name) {
-
-		// Handle event binding
-		jQuery.fn[name] = function (data, fn) {
-			return arguments.length > 0 ? this.on(name, null, data, fn) : this.trigger(name);
-		};
-	});
-
-	jQuery.fn.extend({
-		hover: function hover(fnOver, fnOut) {
-			return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
-		}
-	});
-
-	support.focusin = "onfocusin" in window;
 
 	// Support: Firefox <=44
 	// Firefox doesn't have focus(in | out) events
@@ -8272,7 +8104,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	}
 	var location = window.location;
 
-	var nonce = jQuery.now();
+	var nonce = Date.now();
 
 	var rquery = /\?/;
 
@@ -8319,7 +8151,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					buildParams(prefix + "[" + ((typeof v === "undefined" ? "undefined" : _typeof(v)) === "object" && v != null ? i : "") + "]", v, traditional, add);
 				}
 			});
-		} else if (!traditional && jQuery.type(obj) === "object") {
+		} else if (!traditional && toType(obj) === "object") {
 
 			// Serialize object item.
 			for (name in obj) {
@@ -8340,7 +8172,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		    add = function add(key, valueOrFunction) {
 
 			// If value is a function, invoke it and use its return value
-			var value = jQuery.isFunction(valueOrFunction) ? valueOrFunction() : valueOrFunction;
+			var value = isFunction(valueOrFunction) ? valueOrFunction() : valueOrFunction;
 
 			s[s.length] = encodeURIComponent(key) + "=" + encodeURIComponent(value == null ? "" : value);
 		};
@@ -8453,7 +8285,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			    i = 0,
 			    dataTypes = dataTypeExpression.toLowerCase().match(rnothtmlwhite) || [];
 
-			if (jQuery.isFunction(func)) {
+			if (isFunction(func)) {
 
 				// For each dataType in the dataTypeExpression
 				while (dataType = dataTypes[i++]) {
@@ -8943,7 +8775,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			if (s.crossDomain == null) {
 				urlAnchor = document.createElement("a");
 
-				// Support: IE <=8 - 11, Edge 12 - 13
+				// Support: IE <=8 - 11, Edge 12 - 15
 				// IE throws exception on accessing the href property if url is malformed,
 				// e.g. http://example.com:80x/
 				try {
@@ -9000,8 +8832,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				// Remember the hash so we can put it back
 				uncached = s.url.slice(cacheURL.length);
 
-				// If data is available, append data to url
-				if (s.data) {
+				// If data is available and should be processed, append data to url
+				if (s.data && (s.processData || typeof s.data === "string")) {
 					cacheURL += (rquery.test(cacheURL) ? "&" : "?") + s.data;
 
 					// #9682: remove data so that it's not used in an eventual retry
@@ -9233,7 +9065,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		jQuery[method] = function (url, data, callback, type) {
 
 			// Shift arguments if data argument was omitted
-			if (jQuery.isFunction(data)) {
+			if (isFunction(data)) {
 				type = type || callback;
 				callback = data;
 				data = undefined;
@@ -9269,7 +9101,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 			var wrap;
 
 			if (this[0]) {
-				if (jQuery.isFunction(html)) {
+				if (isFunction(html)) {
 					html = html.call(this[0]);
 				}
 
@@ -9295,7 +9127,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		wrapInner: function wrapInner(html) {
-			if (jQuery.isFunction(html)) {
+			if (isFunction(html)) {
 				return this.each(function (i) {
 					jQuery(this).wrapInner(html.call(this, i));
 				});
@@ -9314,10 +9146,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		},
 
 		wrap: function wrap(html) {
-			var isFunction = jQuery.isFunction(html);
+			var htmlIsFunction = isFunction(html);
 
 			return this.each(function (i) {
-				jQuery(this).wrapAll(isFunction ? html.call(this, i) : html);
+				jQuery(this).wrapAll(htmlIsFunction ? html.call(this, i) : html);
 			});
 		},
 
@@ -9398,7 +9230,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 					_callback = function callback(type) {
 						return function () {
 							if (_callback) {
-								_callback = errorCallback = xhr.onload = xhr.onerror = xhr.onabort = xhr.onreadystatechange = null;
+								_callback = errorCallback = xhr.onload = xhr.onerror = xhr.onabort = xhr.ontimeout = xhr.onreadystatechange = null;
 
 								if (type === "abort") {
 									xhr.abort();
@@ -9429,7 +9261,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 					// Listen to events
 					xhr.onload = _callback();
-					errorCallback = xhr.onerror = _callback("error");
+					errorCallback = xhr.onerror = xhr.ontimeout = _callback("error");
 
 					// Support: IE 9 only
 					// Use onreadystatechange to replace onabort
@@ -9569,7 +9401,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		if (jsonProp || s.dataTypes[0] === "jsonp") {
 
 			// Get callback name, remembering preexisting value associated with it
-			callbackName = s.jsonpCallback = jQuery.isFunction(s.jsonpCallback) ? s.jsonpCallback() : s.jsonpCallback;
+			callbackName = s.jsonpCallback = isFunction(s.jsonpCallback) ? s.jsonpCallback() : s.jsonpCallback;
 
 			// Insert callback into url or form data
 			if (jsonProp) {
@@ -9618,7 +9450,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				}
 
 				// Call if it was a function and we have a response
-				if (responseContainer && jQuery.isFunction(overwritten)) {
+				if (responseContainer && isFunction(overwritten)) {
 					overwritten(responseContainer[0]);
 				}
 
@@ -9707,7 +9539,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 
 		// If it's a function
-		if (jQuery.isFunction(params)) {
+		if (isFunction(params)) {
 
 			// We assume that it's the callback
 			callback = params;
@@ -9803,7 +9635,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				curLeft = parseFloat(curCSSLeft) || 0;
 			}
 
-			if (jQuery.isFunction(options)) {
+			if (isFunction(options)) {
 
 				// Use jQuery.extend here to allow modification of coordinates argument (gh-1848)
 				options = options.call(elem, i, jQuery.extend({}, curOffset));
@@ -9825,6 +9657,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	};
 
 	jQuery.fn.extend({
+
+		// offset() relates an element's border box to the document origin
 		offset: function offset(options) {
 
 			// Preserve chaining for setter
@@ -9834,9 +9668,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				});
 			}
 
-			var doc,
-			    docElem,
-			    rect,
+			var rect,
 			    win,
 			    elem = this[0];
 
@@ -9852,18 +9684,17 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return { top: 0, left: 0 };
 			}
 
+			// Get document-relative position by adding viewport scroll to viewport-relative gBCR
 			rect = elem.getBoundingClientRect();
-
-			doc = elem.ownerDocument;
-			docElem = doc.documentElement;
-			win = doc.defaultView;
-
+			win = elem.ownerDocument.defaultView;
 			return {
-				top: rect.top + win.pageYOffset - docElem.clientTop,
-				left: rect.left + win.pageXOffset - docElem.clientLeft
+				top: rect.top + win.pageYOffset,
+				left: rect.left + win.pageXOffset
 			};
 		},
 
+		// position() relates an element's margin box to its offset parent's padding box
+		// This corresponds to the behavior of CSS absolute positioning
 		position: function position() {
 			if (!this[0]) {
 				return;
@@ -9871,31 +9702,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 			var offsetParent,
 			    offset,
+			    doc,
 			    elem = this[0],
 			    parentOffset = { top: 0, left: 0 };
 
-			// Fixed elements are offset from window (parentOffset = {top:0, left: 0},
-			// because it is its only offset parent
+			// position:fixed elements are offset from the viewport, which itself always has zero offset
 			if (jQuery.css(elem, "position") === "fixed") {
 
-				// Assume getBoundingClientRect is there when computed position is fixed
+				// Assume position:fixed implies availability of getBoundingClientRect
 				offset = elem.getBoundingClientRect();
 			} else {
-
-				// Get *real* offsetParent
-				offsetParent = this.offsetParent();
-
-				// Get correct offsets
 				offset = this.offset();
-				if (!nodeName(offsetParent[0], "html")) {
-					parentOffset = offsetParent.offset();
-				}
 
-				// Add offsetParent borders
-				parentOffset = {
-					top: parentOffset.top + jQuery.css(offsetParent[0], "borderTopWidth", true),
-					left: parentOffset.left + jQuery.css(offsetParent[0], "borderLeftWidth", true)
-				};
+				// Account for the *real* offset parent, which can be the document or its root element
+				// when a statically positioned element is identified
+				doc = elem.ownerDocument;
+				offsetParent = elem.offsetParent || doc.documentElement;
+				while (offsetParent && (offsetParent === doc.body || offsetParent === doc.documentElement) && jQuery.css(offsetParent, "position") === "static") {
+
+					offsetParent = offsetParent.parentNode;
+				}
+				if (offsetParent && offsetParent !== elem && offsetParent.nodeType === 1) {
+
+					// Incorporate borders into its offset, since they are outside its content origin
+					parentOffset = jQuery(offsetParent).offset();
+					parentOffset.top += jQuery.css(offsetParent, "borderTopWidth", true);
+					parentOffset.left += jQuery.css(offsetParent, "borderLeftWidth", true);
+				}
 			}
 
 			// Subtract parent offsets and element margins
@@ -9937,7 +9770,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 				// Coalesce documents and windows
 				var win;
-				if (jQuery.isWindow(elem)) {
+				if (isWindow(elem)) {
 					win = elem;
 				} else if (elem.nodeType === 9) {
 					win = elem.defaultView;
@@ -9985,7 +9818,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 				return access(this, function (elem, type, value) {
 					var doc;
 
-					if (jQuery.isWindow(elem)) {
+					if (isWindow(elem)) {
 
 						// $( window ).outerWidth/Height return w/h including scrollbars (gh-1729)
 						return funcName.indexOf("outer") === 0 ? elem["inner" + name] : elem.document.documentElement["client" + name];
@@ -10012,6 +9845,20 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		});
 	});
 
+	jQuery.each(("blur focus focusin focusout resize scroll click dblclick " + "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " + "change select submit keydown keypress keyup contextmenu").split(" "), function (i, name) {
+
+		// Handle event binding
+		jQuery.fn[name] = function (data, fn) {
+			return arguments.length > 0 ? this.on(name, null, data, fn) : this.trigger(name);
+		};
+	});
+
+	jQuery.fn.extend({
+		hover: function hover(fnOver, fnOut) {
+			return this.mouseenter(fnOver).mouseleave(fnOut || fnOver);
+		}
+	});
+
 	jQuery.fn.extend({
 
 		bind: function bind(types, data, fn) {
@@ -10031,6 +9878,37 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		}
 	});
 
+	// Bind a function to a context, optionally partially applying any
+	// arguments.
+	// jQuery.proxy is deprecated to promote standards (specifically Function#bind)
+	// However, it is not slated for removal any time soon
+	jQuery.proxy = function (fn, context) {
+		var tmp, args, proxy;
+
+		if (typeof context === "string") {
+			tmp = fn[context];
+			context = fn;
+			fn = tmp;
+		}
+
+		// Quick check to determine if target is callable, in the spec
+		// this throws a TypeError, but we will just return undefined.
+		if (!isFunction(fn)) {
+			return undefined;
+		}
+
+		// Simulated bind
+		args = _slice.call(arguments, 2);
+		proxy = function proxy() {
+			return fn.apply(context || this, args.concat(_slice.call(arguments)));
+		};
+
+		// Set the guid of unique handler to the same of original handler, so it can be removed
+		proxy.guid = fn.guid = fn.guid || jQuery.guid++;
+
+		return proxy;
+	};
+
 	jQuery.holdReady = function (hold) {
 		if (hold) {
 			jQuery.readyWait++;
@@ -10041,6 +9919,26 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	jQuery.isArray = Array.isArray;
 	jQuery.parseJSON = JSON.parse;
 	jQuery.nodeName = nodeName;
+	jQuery.isFunction = isFunction;
+	jQuery.isWindow = isWindow;
+	jQuery.camelCase = camelCase;
+	jQuery.type = toType;
+
+	jQuery.now = Date.now;
+
+	jQuery.isNumeric = function (obj) {
+
+		// As of jQuery 3.0, isNumeric is limited to
+		// strings and numbers (primitives or objects)
+		// that can be coerced to finite numbers (gh-2662)
+		var type = jQuery.type(obj);
+		return (type === "number" || type === "string") &&
+
+		// parseFloat NaNs numeric-cast false positives ("")
+		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
+		// subtraction forces infinities to NaN
+		!isNaN(obj - parseFloat(obj));
+	};
 
 	// Register as a named AMD module, since jQuery can be concatenated with other
 	// files that may use define, but not via a proper concatenation script that
@@ -10056,9 +9954,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	// https://github.com/jrburke/requirejs/wiki/Updating-existing-libraries#wiki-anon
 
 	if (true) {
-		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+		!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = (function () {
 			return jQuery;
-		}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
+		}).apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__),
 				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	}
 
@@ -10092,16 +9990,52 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 	return jQuery;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(8)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)(module)))
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports) {
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
 
-// removed by extract-text-webpack-plugin
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+
+var pubSub = {
+
+	events: {},
+
+	subscribe: function subscribe(eventName, fn) {
+		this.events[eventName] = this.events[eventName] || [];
+		this.events[eventName].push(fn);
+	},
+	unsubscribe: function unsubscribe(eventName, fn) {
+		var _this = this;
+
+		if (this.events[eventName]) {
+			this.events[eventName].forEach(function (fxn, i) {
+				if (fxn === fn) {
+					_this.events[eventName].splice(i, 1);
+				}
+			});
+		}
+	},
+	publish: function publish(eventName, data) {
+		if (this.events[eventName]) {
+			this.events[eventName].forEach(function (fn) {
+				fn(data);
+			});
+		}
+	}
+};
+
+exports.default = pubSub;
 
 /***/ }),
-/* 4 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10113,7 +10047,415 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _square = __webpack_require__(6);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Player = function () {
+	function Player(symbol) {
+		_classCallCheck(this, Player);
+
+		this._symbol = symbol;
+		this._score = 0;
+		this._threeinaRow = [38, 193, 280, 74, 289, 148, 19, 13];
+	}
+
+	_createClass(Player, [{
+		key: "updateScore",
+		value: function updateScore(points) {
+			this._score += points;
+		}
+	}, {
+		key: "resetScore",
+		value: function resetScore() {
+			this._score = 0;
+		}
+	}, {
+		key: "isWinner",
+		value: function isWinner() {
+			for (var i = 0; i < this._threeinaRow.length; i++) {
+				if ((this._threeinaRow[i] & this.score) === this._threeinaRow[i]) {
+					return true;
+				}
+			}return false;
+		}
+	}, {
+		key: "symbol",
+		get: function get() {
+			return this._symbol;
+		}
+	}, {
+		key: "score",
+		get: function get() {
+			return this._score;
+		}
+	}]);
+
+	return Player;
+}();
+
+exports.default = Player;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+var _view = __webpack_require__(5);
+
+var _view2 = _interopRequireDefault(_view);
+
+var _game = __webpack_require__(6);
+
+var _game2 = _interopRequireDefault(_game);
+
+__webpack_require__(10);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+$(document).ready(function () {
+	new _view2.default();
+	new _game2.default();
+});
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = function (module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function () {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function get() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function get() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _pubsub = __webpack_require__(1);
+
+var _pubsub2 = _interopRequireDefault(_pubsub);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var View = function () {
+	function View() {
+		_classCallCheck(this, View);
+
+		this.cacheDom();
+		this.bindEvents();
+		this.renderNewGame();
+	}
+
+	_createClass(View, [{
+		key: "cacheDom",
+		value: function cacheDom() {
+			this.$main = $(".main");
+			this.$popBackground = $("#pop_background");
+			this.$gameBox = $("#game_box");
+			this.$popBox = $("#pop_box");
+			this.$loopBox = $("#loop_box");
+			this.$square = this.$main.find(".square");
+			this.$symbol = this.$popBox.find(".symbol");
+			this.$gameBoxText = this.$gameBox.find("h1");
+			this.$yes = this.$gameBox.find("#yes");
+			this.$no = this.$gameBox.find("#no");
+		}
+	}, {
+		key: "bindEvents",
+		value: function bindEvents() {
+			var _this = this;
+
+			_pubsub2.default.subscribe("renderSquare", function (_ref) {
+				var symbol = _ref.symbol,
+				    index = _ref.index;
+
+				_this.renderSquare({ symbol: symbol, index: index });
+			});
+			_pubsub2.default.subscribe("renderMessage", function (message) {
+				_this.renderMessage(message);
+			});
+			_pubsub2.default.subscribe("renderNewGame", function () {
+				_this.renderNewGame();
+			});
+			this.$square.click(function (e) {
+				_this.handleClickedSquare(e.target.id);
+			});
+			this.$symbol.click(function (e) {
+				_this.handleSymbol(e.target.id);
+			});
+			this.$yes.click(function () {
+				_this.handleRestart();
+			});
+			this.$no.click(function () {
+				_this.handleNo();
+			});
+		}
+	}, {
+		key: "renderSquare",
+		value: function renderSquare(_ref2) {
+			var symbol = _ref2.symbol,
+			    index = _ref2.index;
+
+			$("#" + index).text(symbol);
+		}
+	}, {
+		key: "renderNewGame",
+		value: function renderNewGame() {
+			this.$popBackground.fadeIn();
+			this.$popBox.fadeIn("slow");
+			this.$square.text("");
+		}
+	}, {
+		key: "renderMessage",
+		value: function renderMessage(message) {
+			this.$popBackground.fadeIn();
+			this.$gameBoxText.html(message);
+			this.$gameBox.fadeIn("slow");
+		}
+	}, {
+		key: "handleClickedSquare",
+		value: function handleClickedSquare(index) {
+			_pubsub2.default.publish("playerTurn", index);
+		}
+	}, {
+		key: "handleRestart",
+		value: function handleRestart() {
+			this.$gameBox.fadeOut("slow");
+			setTimeout(function () {
+				_pubsub2.default.publish("resetGame", null);
+			}, 1000);
+		}
+	}, {
+		key: "handleNo",
+		value: function handleNo() {
+			var _this2 = this;
+
+			this.$gameBox.fadeOut("slow");
+			setTimeout(function () {
+				_this2.$loopBox.fadeIn("slow");
+			}, 1000);
+			setTimeout(function () {
+				_this2.$loopBox.fadeOut("slow");
+			}, 2000);
+			setTimeout(function () {
+				_pubsub2.default.publish("resetGame", null);
+			}, 3000);
+		}
+	}, {
+		key: "handleSymbol",
+		value: function handleSymbol(value) {
+			this.$popBackground.fadeOut();
+			this.$popBox.fadeOut();
+			_pubsub2.default.publish("selectSymbol", value);
+		}
+	}]);
+
+	return View;
+}();
+
+exports.default = View;
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(0)))
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _board = __webpack_require__(7);
+
+var _board2 = _interopRequireDefault(_board);
+
+var _player = __webpack_require__(2);
+
+var _player2 = _interopRequireDefault(_player);
+
+var _computer = __webpack_require__(9);
+
+var _computer2 = _interopRequireDefault(_computer);
+
+var _pubsub = __webpack_require__(1);
+
+var _pubsub2 = _interopRequireDefault(_pubsub);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Game = function () {
+	function Game() {
+		_classCallCheck(this, Game);
+
+		this.board = new _board2.default();
+		this.gameEnded = false;
+		this.moveNumber = 1;
+		this.computer;
+		this.player;
+		this.currentPlayer;
+		this.bindEvents();
+	}
+
+	_createClass(Game, [{
+		key: "bindEvents",
+		value: function bindEvents() {
+			var _this = this;
+
+			_pubsub2.default.subscribe("playerTurn", function (index) {
+				_this.playerTurn(index);
+			});
+			_pubsub2.default.subscribe("resetGame", function () {
+				_this.resetGame();
+			});
+			_pubsub2.default.subscribe("selectSymbol", function (value) {
+				_this.selectSymbol(value);
+			});
+		}
+	}, {
+		key: "selectSymbol",
+		value: function selectSymbol(char) {
+			if (char === "X") {
+				// If the player chooses X
+				this.computer = new _computer2.default("O");
+				this.player = new _player2.default("X");
+				this.currentPlayer = this.player;
+			} else if (char === "O") {
+				//If the player choose O
+				this.computer = new _computer2.default("X");
+				this.player = new _player2.default("O");
+				this.currentPlayer = this.computer;
+				//The computer selects a square
+				var squareIndex = this.computerTurn();
+				//The game sets the computer's square as occupied and switches the current Player
+				this.executeMove(squareIndex, this.player);
+			}
+		}
+	}, {
+		key: "currentSymbol",
+		value: function currentSymbol() {
+			return this.currentPlayer.symbol;
+		}
+	}, {
+		key: "playerScore",
+		value: function playerScore() {
+			return this.player.score;
+		}
+	}, {
+		key: "computerTurn",
+		value: function computerTurn() {
+			return this.computer.move(this.moveNumber, this.board.squares, this.playerScore());
+		}
+	}, {
+		key: "playerTurn",
+		value: function playerTurn(index) {
+			this.executeMove(index, this.computer);
+		}
+	}, {
+		key: "executeMove",
+		value: function executeMove(index, opposingPlayer) {
+			var _this2 = this;
+
+			if (!this.gameEnded && this.currentPlayer != opposingPlayer && this.board.isSquareEmpty(index)) {
+				this.board.setSquareOccupied(index);
+				this.currentPlayer.updateScore(this.board.getValue(index));
+				this.moveNumber += 1;
+				_pubsub2.default.publish("renderSquare", { symbol: this.currentSymbol(), index: index });
+				this.isGameOver();
+				this.currentPlayer = opposingPlayer;
+				if (!this.gameEnded && this.currentPlayer === this.computer) {
+					setTimeout(function () {
+						var squareIndex = _this2.computerTurn();
+						_this2.executeMove(squareIndex, _this2.player);
+					}, 1000);
+				}
+			}
+		}
+	}, {
+		key: "isGameOver",
+		value: function isGameOver() {
+			var message = void 0;
+			if (this.currentPlayer.isWinner()) {
+				message = this.currentPlayer === this.player ? "You Win!" : "You Lose!";
+			} else if (this.board.isAllFilledIn()) {
+				message = "Tie Game!";
+			} else {
+				return false;
+			}
+			setTimeout(function () {
+				_pubsub2.default.publish("renderMessage", message);
+			}, 500);
+			this.gameEnded = true;
+		}
+	}, {
+		key: "resetGame",
+		value: function resetGame() {
+			this.board.resetSquares();
+			this.player.resetScore();
+			this.computer.resetScore();
+			this.gameEnded = false;
+			this.moveNumber = 1;
+			_pubsub2.default.publish("renderNewGame", null);
+		}
+	}]);
+
+	return Game;
+}();
+
+exports.default = Game;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _square = __webpack_require__(8);
 
 var _square2 = _interopRequireDefault(_square);
 
@@ -10180,151 +10522,7 @@ var Board = function () {
 exports.default = Board;
 
 /***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-var _player = __webpack_require__(0);
-
-var _player2 = _interopRequireDefault(_player);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Computer = function (_Player) {
-	_inherits(Computer, _Player);
-
-	function Computer(symbol) {
-		_classCallCheck(this, Computer);
-
-		var _this = _possibleConstructorReturn(this, (Computer.__proto__ || Object.getPrototypeOf(Computer)).call(this, symbol));
-
-		_this._filled = [];
-		_this._rowCombos = [[34, 2], [6, 5], [36, 1], [65, 7], [192, 0], [129, 6], [24, 8], [264, 4], [272, 3], [10, 6], [66, 3], [72, 1], [288, 0], [33, 8], [257, 5], [20, 7], [132, 4], [144, 2], [18, 0], [3, 4], [17, 1], [12, 0], [5, 3], [9, 2]];
-
-		_this._symbol = symbol;
-		return _this;
-	}
-
-	_createClass(Computer, [{
-		key: "move",
-		value: function move(movenumber, squares, score) {
-			var index = void 0;
-			for (var i = 0; i < 9; i++) {
-				if (!squares[i].isEmpty() && this._filled.indexOf(i) === -1) {
-					this._filled.push(i);
-				}
-			}
-
-			index = movenumber === 1 ? this.getRandom(0, 5) : movenumber === 2 ? this.secondMove(this._filled[0]) : movenumber === 3 ? this.thirdMove(this._filled[0], this._filled[1]) : movenumber === 4 ? this.fourthMove(score, this._filled[0], this._filled[2]) : this.fifthMove(this._score, score, this._filled[0], this._filled[1], this._filled[2]);
-
-			this._filled.push(index);
-			return index;
-		}
-	}, {
-		key: "secondMove",
-		value: function secondMove(num) {
-			return num === 0 ? this.getRandom(1, 5) : 0;
-		}
-	}, {
-		key: "thirdMove",
-		value: function thirdMove(num1, num2) {
-			if (num1 === 0) {
-				//computer owns the center
-				return num2 < 5 ? this.verticalRow(num2) : this.getRandom(1, 5);
-			} else {
-				//kitty-corner ?		
-				return this.isDiagonal(num1, num2) ? this.verticalRow(num2) :
-				//player owns the center ?
-				num2 === 0 ? this.diagonal(num1) : 0;
-			}
-		}
-	}, {
-		key: "fourthMove",
-		value: function fourthMove(playerScore, num1, num2) {
-			return this.rowDetector(playerScore) || (this.isDiagonal(num1, num2) ? this.getRandom(5, 9) : num2 > 4 ? this.adjacent(num2) : this.getRandom(1, 5));
-		}
-	}, {
-		key: "fifthMove",
-		value: function fifthMove(computerScore, playerScore, num1, num2, num3) {
-			if (this.rowDetector(computerScore) !== false) return this.rowDetector(computerScore);
-			return this.rowDetector(playerScore) || (this.horzAdj(num1, num2) ? this.verticalRow(num1) : this.vertAdj(num1, num2) ? this.horizontalRow(num1) : num1 > 0 && num1 < 5 && num2 > 0 && num2 < 5 && num1 > 0 && num3 < 5 ? this.getRandom(1, 5) : this.getRandom(0, 9));
-		}
-	}, {
-		key: "rowDetector",
-		value: function rowDetector(num1) {
-			for (var i = 0; i < this._rowCombos.length; i++) {
-				if ((num1 & this._rowCombos[i][0]) === this._rowCombos[i][0] && this._filled.indexOf(this._rowCombos[i][1]) === -1) {
-					return this._rowCombos[i][1];
-				}
-			}return false;
-		}
-	}, {
-		key: "isDiagonal",
-		value: function isDiagonal(num1, num2) {
-			return num1 === 1 && num2 === 4 || num1 === 4 && num2 === 1 || num1 === 2 && num2 === 3 || num1 === 3 && num2 === 2;
-		}
-	}, {
-		key: "diagonal",
-		value: function diagonal(num) {
-			return num === 1 ? 4 : num === 4 ? 1 : num === 2 ? 3 : num === 3 ? 2 : false;
-		}
-	}, {
-		key: "verticalRow",
-		value: function verticalRow(num) {
-			return num === 1 ? 3 : num === 3 ? 1 : num === 2 ? 4 : num === 4 ? 2 : false;
-		}
-	}, {
-		key: "horizontalRow",
-		value: function horizontalRow(num) {
-			return num === 1 ? 2 : num === 2 ? 1 : num === 3 ? 4 : num === 4 ? 3 : false;
-		}
-	}, {
-		key: "adjacent",
-		value: function adjacent(num) {
-			return num === 5 || num === 6 ? 1 : num === 7 || num === 8 ? 4 : false;
-		}
-	}, {
-		key: "horzAdj",
-		value: function horzAdj(num1, num2) {
-			return (num1 === 1 || num1 === 2) && num2 === 5 ? true : (num1 === 3 || num1 === 4) && num2 === 8 ? true : false;
-		}
-	}, {
-		key: "vertAdj",
-		value: function vertAdj(num1, num2) {
-			return (num1 === 1 || num1 === 3) && num2 === 6 ? true : (num1 === 2 || num1 === 4) && num2 === 7 ? true : false;
-		}
-	}, {
-		key: "getRandom",
-		value: function getRandom(min, max) {
-			var random = void 0;
-			do {
-				random = Math.floor(Math.random() * (max - min) + min);
-			} while (this._filled.indexOf(random) != -1);
-			return random;
-		}
-	}]);
-
-	return Computer;
-}(_player2.default);
-
-exports.default = Computer;
-
-/***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -10374,131 +10572,262 @@ var Square = function () {
 exports.default = Square;
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function($) {
 
-var _game = __webpack_require__(1);
 
-var _game2 = _interopRequireDefault(_game);
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
-__webpack_require__(3);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _player = __webpack_require__(2);
+
+var _player2 = _interopRequireDefault(_player);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var view = {
-	init: function init() {
-		this.cacheDom();
-		this.bindEvents();
-		this.renderNew();
-	},
-	cacheDom: function cacheDom() {
-		this.$main = $(".main");
-		this.$popBackground = $("#pop_background");
-		this.$gameBox = $("#game_box");
-		this.$popBox = $("#pop_box");
-		this.$loopBox = $("#loop_box");
-		this.$square = this.$main.find(".square");
-		this.$symbol = this.$popBox.find(".symbol");
-		this.$gameBoxText = this.$gameBox.find("h1");
-		this.$yes = this.$gameBox.find("#yes");
-		this.$no = this.$gameBox.find("#no");
-	},
-	bindEvents: function bindEvents() {
-		this.$square.click(function (e) {
-			view.handleClickSquare(e.target.id);
-		});
-		this.$symbol.click(function (e) {
-			view.handleSymbol(e.target.id);
-		});
-		this.$yes.click(function () {
-			view.handleRestart();
-		});
-		this.$no.click(function () {
-			view.handleNo();
-		});
-	},
-	render: function render(player, id) {
-		$("#" + id).text(player);
-	},
-	renderNew: function renderNew() {
-		this.$popBackground.fadeIn();
-		this.$popBox.fadeIn("slow");
-		this.$square.text("");
-	},
-	renderGame: function renderGame(string) {
-		this.$popBackground.fadeIn();
-		this.$gameBoxText.html(string);
-		this.$gameBox.fadeIn("slow");
-	},
-	handleClickSquare: function handleClickSquare(index) {
-		game.playerTurn(index);
-	},
-	handleRestart: function handleRestart() {
-		this.$gameBox.fadeOut("slow");
-		setTimeout(function () {
-			game.resetGame();
-		}, 1000);
-	},
-	handleNo: function handleNo() {
-		var _this = this;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-		this.$gameBox.fadeOut("slow");
-		setTimeout(function () {
-			_this.$loopBox.fadeIn("slow");
-		}, 1000);
-		setTimeout(function () {
-			_this.$loopBox.fadeOut("slow");
-		}, 2000);
-		setTimeout(function () {
-			game.resetGame();
-		}, 3000);
-	},
-	handleSymbol: function handleSymbol(value) {
-		this.$popBackground.fadeOut();
-		this.$popBox.fadeOut();
-		game.selectSymbol(value);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+//			Squares by Index (center = 0, corner squares < 5, side squares >= 5)
+//			 ___ ___ ___
+//			| 1 | 5 | 2 |
+//			 ~ ~ ~ ~ ~ ~ 			
+//			| 6 | 0 | 7 |
+//			 ~ ~ ~ ~ ~ ~
+//			| 3 | 8 | 4 |
+//			 ~ ~ ~ ~ ~ ~
+//
+//			Squares by value ( 2 ^ index)
+//			 ___ ___ ___
+//			| 2 | 32| 4 |
+//			 ~ ~ ~ ~ ~ ~ 			
+//			| 64| 1 |128|
+//			 ~ ~ ~ ~ ~ ~
+//			| 8 |256| 16|
+//			 ~ ~ ~ ~ ~ ~
+//
+//			Any combination of squares has a unique sum value.
+//			
+//			The computer can tell if a row is about to be completed by using a bitwise AND operator
+//			to compare the player or computer's score with a row's value.
+//			
+//			For example, for index 5, there are two ways to win with that square -->
+//				1) 1 - 5 - 2 --> value = (2 ^ 1) + (2 ^ 5) + (2 ^ 2) = 38
+//				2) 5 - 0 - 8 --> value = (2 ^ 5) + (2 ^ 0) + (2 ^ 8) = 289
+//					
+//					The value of those rows if 5 is not filled in yet -> 
+//						1) 38 - (2 ^ 5) = 6
+//						2) 289 - (2 ^ 5) = 257
+//
+//			If either the player or computer's scores match 6 or 257 using a bitwise AND, 
+//			the rowDetector fxn returns the index of the (missing) 5 square (if not occupied by the other player).
+
+
+var Computer = function (_Player) {
+	_inherits(Computer, _Player);
+
+	function Computer(symbol) {
+		_classCallCheck(this, Computer);
+
+		//The computers list of occupied squares
+		var _this = _possibleConstructorReturn(this, (Computer.__proto__ || Object.getPrototypeOf(Computer)).call(this, symbol));
+
+		_this._filled = [];
+
+		//they indices represent square indices,
+		//the array values represent scores for each row or column running through that square index
+		_this._rowCombos = [[12, 18, 192, 288], [17, 36, 72], [9, 34, 144], [5, 66, 272], [3, 132, 264], [6, 257], [10, 129], [20, 65], [24, 33]];
+
+		_this.movesList = [_this.getRandomCornerSquare.bind(_this), _this.secondMove.bind(_this), _this.thirdMove.bind(_this), _this.fourthMove.bind(_this), _this.laterMoves.bind(_this), _this.laterMoves.bind(_this), _this.laterMoves.bind(_this), _this.laterMoves.bind(_this), _this.laterMoves.bind(_this)];
+		return _this;
 	}
-};
 
-var game = new _game2.default();
+	_createClass(Computer, [{
+		key: "move",
+		value: function move(moveNumber, squares, playerScore) {
+			//Fills in any previously unoccupied squarse
+			for (var i = 0; i < 9; i++) {
+				if (!squares[i].isEmpty() && this._filled.indexOf(i) === -1) {
+					this._filled.push(i);
+				}
+			}
+			// A table which tells the computer which function to use depending on the moveNumber
+			var index = this.movesList[moveNumber - 1](playerScore);
+			this._filled.push(index);
+			return index;
+		}
+	}, {
+		key: "secondMove",
+		value: function secondMove() {
+			return this.isOccupied(0) ? this.getRandomCornerSquare() : 0;
+		}
+	}, {
+		key: "thirdMove",
+		value: function thirdMove() {
+			var computerSquare = this._filled[0];
+			var playerSquare = this._filled[1];
+			var centerSquare = 0;
+			//If the computer and player squares are diagonal to each other return the square vertical to the player's square
+			if (playerSquare === this.diagonalTo(computerSquare)) return this.verticalTo(playerSquare);else if (playerSquare === this.verticalTo(computerSquare)) return this.diagonalTo(computerSquare);else if (playerSquare === this.horizontalTo(computerSquare)) return this.diagonalTo(computerSquare);
+			//Computer takes the center square if it is empty
+			else if (!this.isOccupied(centerSquare)) return centerSquare;
+				//If the player has the center square, computer takes the square diagonal to its last square
+				else if (playerSquare === centerSquare) return this.diagonalTo(computerSquare);
+					//If the computer has the center square it takes the square vertical to the player's square
+					else return this.verticalTo(playerSquare);
+		}
+	}, {
+		key: "fourthMove",
+		value: function fourthMove(playerScore) {
+			var num1 = this._filled[0];
+			var num2 = this._filled[2];
+			var rowsToBlock = this.rowDetector(playerScore);
+			//If there is a row that should be blocked, return the last square in that row
+			if (rowsToBlock !== null) return rowsToBlock;else if (num2 === this.diagonalTo(num1, num2)) return this.getRandomSideSquare();else if (this.isSideSquare(num2)) return this.adjacentTo(num2);else return this.getRandomCornerSquare();
+		}
+	}, {
+		key: "laterMoves",
+		value: function laterMoves(playerScore) {
+			var num1 = this._filled[0];
+			var num2 = this._filled[1];
+			var num3 = this._filled[2];
+			var rowsToComplete = this.rowDetector(this._score);
+			var rowsToBlock = this.rowDetector(playerScore);
+			if (rowsToComplete !== null) return rowsToComplete;else if (rowsToBlock !== null) return rowsToBlock;else if (this.isHorzAdj(num1, num2)) return this.verticalTo(num1);else if (this.isVertAdj(num1, num2)) return this.horizontalTo(num1);else if (this.isCornerSquare(num1) && this.isCornerSquare(num2) && !this.isSideSquare(num3)) return this.getRandomCornerSquare();else return this.getRandomSquare();
+		}
+	}, {
+		key: "rowDetector",
+		value: function rowDetector(score) {
+			//Iterates through rowCombos values and checks for a match bit-match with score
+			//if a value matches score, the index of that value (the square index) is returned
+			for (var key = 0; key < this._rowCombos.length; key++) {
+				var curr = this._rowCombos[key];
+				for (var rowScore = 0; rowScore < curr.length; rowScore++) {
+					//Uses a bitwise operator to compare the score with the rows value
+					if ((score & curr[rowScore]) === curr[rowScore] && this._filled.indexOf(key) === -1) {
+						return key;
+					}
+				}
+			}
+			//console.log(null);
+			return null;
+		}
 
-$(document).ready(function () {
-	game.init(view);
-});
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+		//These functions return a square that meets the criteria provided by the initial square
+
+	}, {
+		key: "diagonalTo",
+		value: function diagonalTo(num) {
+			var options = { 1: 4, 4: 1, 2: 3, 3: 2 };
+			return options[num] || false;
+		}
+	}, {
+		key: "verticalTo",
+		value: function verticalTo(num) {
+			var options = { 1: 3, 3: 1, 2: 4, 4: 2 };
+			return options[num] || false;
+		}
+	}, {
+		key: "horizontalTo",
+		value: function horizontalTo(num) {
+			var options = { 1: 2, 2: 1, 3: 4, 4: 3 };
+			return options[num] || false;
+		}
+	}, {
+		key: "adjacentTo",
+		value: function adjacentTo(num) {
+			var options = { 5: 1, 6: 1, 7: 4, 8: 4 };
+			return options[num] || false;
+		}
+
+		//These functions return information about the relative position of the given squares
+
+
+	}, {
+		key: "isHorzAdj",
+		value: function isHorzAdj(num1, num2) {
+			var options = {
+				5: { 1: true, 2: true },
+				8: { 3: true, 4: true }
+			};
+			return options[num2] && options[num2][num1] || false;
+		}
+	}, {
+		key: "isVertAdj",
+		value: function isVertAdj(num1, num2) {
+			var options = {
+				6: { 1: true, 3: true },
+				7: { 2: true, 4: true }
+			};
+			return options[num2] && options[num2][num1] || false;
+		}
+
+		// Utility functions
+
+	}, {
+		key: "getRandom",
+		value: function getRandom(min, max) {
+			var random = void 0;
+			do {
+				random = Math.floor(Math.random() * (max - min + 1) + min);
+			} while (this._filled.indexOf(random) != -1);
+			return random;
+		}
+	}, {
+		key: "getRandomSquare",
+		value: function getRandomSquare() {
+			return this.getRandom(0, 8);
+		}
+	}, {
+		key: "getRandomCornerSquare",
+		value: function getRandomCornerSquare() {
+			return this.getRandom(1, 4);
+		}
+	}, {
+		key: "getRandomCornerSquareOrCenter",
+		value: function getRandomCornerSquareOrCenter() {
+			return this.getRandom(0, 4);
+		}
+	}, {
+		key: "getRandomSideSquare",
+		value: function getRandomSideSquare() {
+			return this.getRandom(5, 8);
+		}
+	}, {
+		key: "isOccupied",
+		value: function isOccupied(num) {
+			return this._filled.indexOf(num) > -1;
+		}
+	}, {
+		key: "isCornerSquare",
+		value: function isCornerSquare(num) {
+			return num > 0 && num < 5;
+		}
+	}, {
+		key: "isSideSquare",
+		value: function isSideSquare(num) {
+			return num >= 5;
+		}
+	}]);
+
+	return Computer;
+}(_player2.default);
+
+exports.default = Computer;
 
 /***/ }),
-/* 8 */
-/***/ (function(module, exports, __webpack_require__) {
+/* 10 */
+/***/ (function(module, exports) {
 
-"use strict";
-
-
-module.exports = function (module) {
-	if (!module.webpackPolyfill) {
-		module.deprecate = function () {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function get() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function get() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
